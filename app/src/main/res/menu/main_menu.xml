@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/item4"
+        android:title="Tạo ảnh GIF"/>
+
+    <item android:id="@+id/item5"
+        android:title="Tạo ảnh ghép"/>
+
+    <item android:id="@+id/item6"
+        android:title="Trình chiếu"/>
+
+    <item android:id="@+id/item7"
+        android:title="Thùng rác"/>
+
+    <item android:id="@+id/itemSetting"
+        android:title="Cài đặt"/>
+
+    <item android:id="@+id/item8"
+        android:title="Giải phóng dung lượng"/>
+
+</menu>
