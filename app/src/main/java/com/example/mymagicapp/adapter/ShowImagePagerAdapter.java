@@ -22,17 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShowImagePagerAdapter extends PagerAdapter {
-    public List<MyImage> imageList;
+    public MyImage[] imageList;
     public Context context;
 
-    public ShowImagePagerAdapter(List<MyImage> imageList, Context context) {
+    public ShowImagePagerAdapter(MyImage[] imageList, Context context) {
         this.imageList = imageList;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return imageList.size();
+        return imageList.length;
     }
 
     @Override
@@ -45,14 +45,14 @@ public class ShowImagePagerAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         PhotoView imageView = new PhotoView(context);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        if (imageList.get(position).isImageByUrl()) {
-            Glide.with(context).load(imageList.get(position).getUrl())
+        if (imageList[position].isImageFromUri()) {
+            Glide.with(context).load(imageList[position].getUri())
                     .fitCenter()
                     .error(R.drawable.ic_add_image)
                     .into(imageView);
         }
         else {
-            Glide.with(context).load(imageList.get(position).getResId())
+            Glide.with(context).load(imageList[position].getImageId())
                     .fitCenter()
                     .error(R.drawable.ic_add_image)
                     .into(imageView);

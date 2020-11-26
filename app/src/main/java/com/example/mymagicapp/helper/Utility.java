@@ -1,25 +1,33 @@
 package com.example.mymagicapp.helper;
 
-import android.content.ContentUris;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.example.mymagicapp.models.Album;
-import com.example.mymagicapp.models.CollectionOfDay;
+import com.example.mymagicapp.models.Gallery;
 import com.example.mymagicapp.models.MyImage;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.lang.reflect.Type;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +39,9 @@ public class Utility {
     public static final String KEY_NAME_COLLECTION = "KEY_NAME_COLLECTION";
     public static final String KEY_NAME_ALBUM = "KEY_NAME_ALBUM";
     public static final String KEY_NAME_IMAGE_LIST = "KEY_NAME_IMAGE_LIST";
-    public static final String KEY_NAME_DATA = "KEY_NAME_DATA";
-    public static final String KEY_NAME_IMAGE_DATA = "KEY_NAME_IMAGE_DATA";
+    public static final int DEFAULT_IMAGE_ID = 0;
+    public static final int DEFAULT_INDEX_TO_ADD = -1;
+    public static final int INDEX_TO_ADD_IMAGE = 100;
 
     public static int widthPixelsDp(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -48,111 +57,99 @@ public class Utility {
         return (int) (widthPixelsDp(context) / SPAN_COUNT_ITEM_IMAGE) - 5;
     }
 
-    public static void saveData(Context context, String keyDataName, String data) {
+    public static void saveData(Context context, String keyDataName, Object data) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARE_PREFERENCES_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(keyDataName, data);
+        Gson gson = new Gson();
+        String json = gson.toJson(data);
+        editor.putString(keyDataName, json);
         editor.apply();
     }
 
-    public static String getData(Context context, String keyNameData) {
+    public static <T> T getData(Context context, String keyNameData, Type type) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARE_PREFERENCES_NAME, Context.MODE_PRIVATE);
         String data = sharedPreferences.getString(keyNameData, null);
-        return data;
+        if (data == null)
+            return null;
+        else {
+            Gson gson = new Gson();
+            return gson.fromJson(data, type);
+        }
     }
 
-    public static LocalDate stringToDate(String date) {
-        if (date.length() == 8) {
-            int day = Integer.parseInt(date.subSequence(0, 2).toString());
-            int month = Integer.parseInt(date.subSequence(2, 4).toString());
-            int year = Integer.parseInt(date.subSequence(4, 8).toString());
-            return LocalDate.of(year, month, day);
-        } else return LocalDate.MIN;
+    public static void saveRealGalleryToSharedAndFirebase(Activity activity) {
+        Uri uri;
+        Cursor cursor;
+        int column_index_data, column_index_date_added, column_index_display_name;
+
+        Gallery gallery = new Gallery(); // create gallery
+        Album album = new Album(); // create album
+
+        String absolutePathOfImage = null;
+        String nameAlbumOfImage = null;
+        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        String[] projection = {MediaStore.MediaColumns.DATA,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.MediaColumns.DATE_ADDED,};
+
+        cursor = activity.getContentResolver().query(uri, projection, null,
+                null, "date_added DESC");
+
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        column_index_date_added = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED);
+        column_index_display_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+
+        while (cursor.moveToNext()) {
+            absolutePathOfImage = cursor.getString(column_index_data);
+            nameAlbumOfImage = cursor.getString(column_index_display_name);
+
+            long seconds = Long.parseLong(cursor.getString(column_index_date_added));
+            LocalDate date = secondsToLocalDate(seconds); // get date added
+
+            MyImage image = new MyImage(absolutePathOfImage);
+            image.setDate(date.toString()); // set date of image
+
+            gallery.addItem(image, Utility.INDEX_TO_ADD_IMAGE); // add image to gallery
+            album.addImage(image, nameAlbumOfImage); // add image to album
+        }
+        saveGallery(gallery, activity); // save gallery to shared
+        saveData(activity, Utility.KEY_NAME_ALBUM, album); // save album to shared
+
+//        saveGalleryToFirebase(gallery);
     }
 
-    public static String dateToString(LocalDate date) {
-        String result = "";
-        int day = date.getDayOfMonth();
-        int month = date.getMonthValue();
-        int year = date.getYear();
-        if (day < 10) {
-            result += "0" + day;
-        } else result += day;
-        if (month < 10) {
-            result += "0" + month;
-        } else result += month;
-        result += year;
-        return result;
+    public static LocalDate secondsToLocalDate(long seconds) {
+        return Instant.ofEpochSecond(seconds).atZone(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDate();
     }
 
-    public static String stringFromCollectionList(List<CollectionOfDay> conversations) {
-        Gson gson = new Gson();
-        String str = gson.toJson(conversations);
-        return str;
-    }
-
-    public static List<CollectionOfDay> collectionListFromString(String json) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<CollectionOfDay>>() {
-        }.getType();
-        ArrayList<CollectionOfDay> list = gson.fromJson(json, type);
-        return list;
-    }
-
-    public static String stringFromAlbumList(List<Album> conversations) {
-        Gson gson = new Gson();
-        String str = gson.toJson(conversations);
-        return str;
-    }
-
-    public static List<Album> albumListFromString(String json) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<Album>>() {
-        }.getType();
-        ArrayList<Album> list = gson.fromJson(json, type);
-        return list;
-    }
-
-    public static void settingDataToUpLoadData(List<CollectionOfDay> collectionList) {
-        for (CollectionOfDay collection : collectionList
+    public static void saveGalleryToFirebase(Gallery gallery) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        List<MyImage> images = gallery.toImageArray();
+        for (MyImage image : images
         ) {
-            collection.removeImage(0);
+            Uri file = Uri.fromFile(new File(image.getUri()));
+            String[] split = image.getUri().split("/");
+            StorageReference riversRef = storageRef.child("images/" + split[split.length - 1]);
+
+            riversRef.putFile(file)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            // ...
+                        }
+                    });
         }
     }
 
-    public static String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } catch (Exception e) {
-            Log.e(TAG, "getRealPathFromURI Exception : " + e.toString());
-            return "";
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    public static void uploadDataToSettingData(List<CollectionOfDay> collectionList) {
-        for (CollectionOfDay collection : collectionList
-        ) {
-            collection.addUploadImage();
-        }
-    }
-
-    public static void saveImageList(List<CollectionOfDay> collectionList, Context context){
-        List<MyImage> imageList = new ArrayList<>();
-        for (CollectionOfDay collection: collectionList
-        ) {
-            imageList.addAll(collection.getImageList());
-        }
-        Gson gson = new Gson();
-        String json = gson.toJson(imageList);
-        Utility.saveData(context, Utility.KEY_NAME_IMAGE_LIST, json);
+    public static void saveGallery(Gallery gallery, Context context){
+        saveData(context, Utility.KEY_NAME_COLLECTION, gallery);
+        saveData(context, Utility.KEY_NAME_IMAGE_LIST, gallery.toImageArray().toArray());
     }
 }

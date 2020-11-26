@@ -12,18 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mymagicapp.R;
-import com.example.mymagicapp.models.Album;
+import com.example.mymagicapp.models.ItemAlbum;
 import com.example.mymagicapp.models.MyImage;
 
-import java.util.List;
-
-public class RecyclerViewAlbumMainAdapter extends RecyclerView.Adapter<RecyclerViewAlbumMainAdapter.RecyclerViewAlbumMainHolder> {
-
-    public List<Album> albumList;
+public class RecyclerViewAlbumAdapter extends RecyclerView.Adapter<RecyclerViewAlbumAdapter.RecyclerViewAlbumMainHolder> {
+    public ItemAlbum[] itemAlbumList;
     public Context context;
 
-    public RecyclerViewAlbumMainAdapter(List<Album> albumList, Context context) {
-        this.albumList = albumList;
+    public RecyclerViewAlbumAdapter(ItemAlbum[] itemAlbumList, Context context) {
+        this.itemAlbumList = itemAlbumList;
         this.context = context;
     }
 
@@ -36,19 +33,19 @@ public class RecyclerViewAlbumMainAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAlbumMainHolder holder, int position) {
-        Album album = albumList.get(position);
-        MyImage image = album.getMyImage();
-        Glide.with(context).load(image.getUrl())
+        ItemAlbum itemAlbum = itemAlbumList[position];
+        MyImage image = itemAlbum.getCurrentImage();
+        Glide.with(context).load(image.getUri())
                 .centerCrop()
                 .error(R.drawable.like)
                 .into(holder.imageView);
-        holder.textTitle.setText(album.getTitle());
-        holder.textAmount.setText(Integer.toString(album.getAmount()));
+        holder.textTitle.setText(itemAlbum.getTitle());
+        holder.textAmount.setText(Integer.toString(itemAlbum.getAmount()));
     }
 
     @Override
     public int getItemCount() {
-        return albumList.size();
+        return itemAlbumList.length;
     }
 
     public class RecyclerViewAlbumMainHolder extends RecyclerView.ViewHolder{

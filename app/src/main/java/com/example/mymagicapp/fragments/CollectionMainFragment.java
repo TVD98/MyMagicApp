@@ -10,25 +10,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.mymagicapp.R;
-import com.example.mymagicapp.adapter.RecyclerViewMainAdapter;
+import com.example.mymagicapp.adapter.RecyclerViewAdapter;
 import com.example.mymagicapp.helper.Utility;
-import com.example.mymagicapp.models.CollectionOfDay;
-import com.example.mymagicapp.models.CollectionOfDayBuilder;
-import com.example.mymagicapp.models.MyImageBuilder;
+import com.example.mymagicapp.models.Gallery;
+import com.example.mymagicapp.models.MyImage;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 public class CollectionMainFragment extends Fragment {
-
     public RecyclerView recyclerViewMain;
-    public List<CollectionOfDay> collectionList = new ArrayList<>();
+    public Gallery gallery;
 
     public CollectionMainFragment() {
         // Required empty public constructor
@@ -45,35 +37,14 @@ public class CollectionMainFragment extends Fragment {
 
         init();
 
-        recyclerViewMain.setAdapter(new RecyclerViewMainAdapter(collectionList, getActivity()));
+        recyclerViewMain.setAdapter(new RecyclerViewAdapter(gallery.toArray(), getActivity()));
         recyclerViewMain.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void init() {
-        String json = Utility.getData(getActivity(), Utility.KEY_NAME_COLLECTION);
-        if (json != null) {
-            List<CollectionOfDay> uploadCollectionList = Utility.collectionListFromString(json);
-            collectionList.addAll(uploadCollectionList);
-        }
-        String jsonImageData = Utility.getData(getActivity(), Utility.KEY_NAME_IMAGE_DATA);
-        if (jsonImageData != null) {
-            Gson gson = new Gson();
-            CollectionOfDay collectionData = gson.fromJson(jsonImageData, CollectionOfDay.class);
-            int index = -1;
-            for (int i = 0; i < collectionList.size(); i++) {
-                if (collectionList.get(i).compareTo(collectionData) == 0) {
-                    collectionList.remove(i);
-                    collectionList.add(i, collectionData);
-                    index = i;
-                    break;
-                }
-            }
-            if (index == -1) {
-                collectionList.add(collectionData);
-                Collections.sort(collectionList);
-            }
-            Utility.saveImageList(collectionList, getActivity());
-        }
+        gallery = Utility.getData(getActivity(), Utility.KEY_NAME_COLLECTION, Gallery.class);
+        if(gallery == null)
+            gallery = new Gallery();
     }
 
     @Override
@@ -84,4 +55,5 @@ public class CollectionMainFragment extends Fragment {
         recyclerViewMain = v.findViewById(R.id.recyclerViewMain);
         return v;
     }
+
 }

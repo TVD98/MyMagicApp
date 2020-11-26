@@ -4,36 +4,46 @@ import android.net.Uri;
 
 import com.example.mymagicapp.helper.Constraint;
 
-public class Album {
-    private String title = "";
-    private MyImage myImage;
-    private int amount = 0;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Album() {
-        this.myImage = new MyImageBuilder().buildMyImage();
+public class Album implements IMyCollection{
+    private List<ItemAlbum> itemAlbums = new ArrayList<>();
+
+    @Override
+    public void addItem(MyItem item, int index) {
+        itemAlbums.add(index, (ItemAlbum) item);
     }
 
-    public String getTitle() {
-        return title;
+    @Override
+    public void sort() {
+
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void addImage(MyImage image, String nameAlbum){
+        ItemAlbum item = findItemByName(nameAlbum);
+        if(item != null){
+            item.addImage(image);
+        }
+        else{
+            item = new ItemAlbum();
+            item.setName(nameAlbum);
+            item.addImage(image);
+            itemAlbums.add(item);
+        }
     }
 
-    public MyImage getMyImage() {
-        return myImage;
+    private ItemAlbum findItemByName(String name){
+        ItemAlbum item = itemAlbums.stream()
+                .filter(x -> x.getName().compareTo(name)==0)
+                .findAny()
+                .orElse(null);
+        return item;
     }
 
-    public void setMyImage(String uri) {
-        this.myImage.setUrl(uri);
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public ItemAlbum[] toArray(){
+        ItemAlbum[] temp = new ItemAlbum[itemAlbums.size()];
+        itemAlbums.toArray(temp);
+        return temp;
     }
 }

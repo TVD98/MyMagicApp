@@ -9,22 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mymagicapp.R;
-import com.example.mymagicapp.helper.Constraint;
 import com.example.mymagicapp.helper.Utility;
-import com.example.mymagicapp.models.CollectionOfDay;
+import com.example.mymagicapp.models.ItemGallery;
 
-import java.util.List;
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewMainHolder> {
+    public ItemGallery[] itemGalleries;
+    public Context context;
 
-public class RecyclerViewMainAdapter extends RecyclerView.Adapter<RecyclerViewMainAdapter.RecyclerViewMainHolder> {
-    public List<CollectionOfDay> collectionList;
-    public FragmentActivity context;
-
-    public RecyclerViewMainAdapter(List<CollectionOfDay> collectionList, FragmentActivity context) {
-        this.collectionList = collectionList;
+    public RecyclerViewAdapter(ItemGallery[] itemGalleries, Context context) {
+        this.itemGalleries = itemGalleries;
         this.context = context;
     }
 
@@ -38,28 +34,25 @@ public class RecyclerViewMainAdapter extends RecyclerView.Adapter<RecyclerViewMa
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewMainHolder holder, int position) {
-        CollectionOfDay collection = collectionList.get(position);
-        holder.textTitle.setText(collection.getTitle());
-        holder.textDescription.setText(collection.getDescription());
-        holder.recyclerView.setAdapter(new RecyclerViewItemMainAdapter(collection.getImageList(), context));
+        ItemGallery itemGallery = itemGalleries[position];
+        holder.textTitle.setText(itemGallery.getTitle());
+        holder.recyclerView.setAdapter(new RecyclerViewItemAdapter(itemGallery.toArray(), context));
         holder.recyclerView.setLayoutManager(new GridLayoutManager(context, Utility.SPAN_COUNT_ITEM_IMAGE));
     }
 
     @Override
     public int getItemCount() {
-        return collectionList.size();
+        return itemGalleries.length;
     }
 
     public class RecyclerViewMainHolder extends RecyclerView.ViewHolder{
         public TextView textTitle;
-        public TextView textDescription;
         public RecyclerView recyclerView;
 
         public RecyclerViewMainHolder(@NonNull View itemView) {
             super(itemView);
 
             textTitle = itemView.findViewById(R.id.textViewTitle);
-            textDescription = itemView.findViewById(R.id.textViewDescription);
             recyclerView = itemView.findViewById(R.id.recyclerViewItemMain);
         }
     }

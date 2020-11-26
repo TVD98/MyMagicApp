@@ -18,7 +18,7 @@
 
     </style>
     <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">22sp</item>
     </style>
 
     <style name="Theme.Login" parent="Theme.AppCompat.NoActionBar">

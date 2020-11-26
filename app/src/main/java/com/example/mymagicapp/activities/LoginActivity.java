@@ -2,20 +2,17 @@ package com.example.mymagicapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.helper.Constraint;
 import com.example.mymagicapp.helper.Utility;
-import com.example.mymagicapp.models.CollectionOfDay;
-import com.example.mymagicapp.models.CollectionOfDayBuilder;
+import com.example.mymagicapp.models.Gallery;
+import com.example.mymagicapp.models.ItemGallery;
 import com.example.mymagicapp.models.MyImage;
-import com.example.mymagicapp.models.MyImageBuilder;
 import com.google.gson.Gson;
 
 import java.time.LocalDate;
@@ -107,25 +104,41 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void saveData() {
-        Gson gson = new Gson();
-        String json = gson.toJson(passwordToCollection());
-        Utility.saveData(this, Utility.KEY_NAME_IMAGE_DATA, json);
+        MyImage image = passwordToImage();
+        Gallery gallery = Utility.getData(this, Utility.KEY_NAME_COLLECTION, Gallery.class); // get gallery from shared..
+        gallery.addItem(image, Utility.INDEX_TO_ADD_IMAGE); // add image to gallery
+        gallery.sort();
+        Utility.saveGallery(gallery, this); // save gallery to shared
     }
 
-    private CollectionOfDay passwordToCollection() {
+    private MyImage passwordToImage() {
         try {
-            int day = Integer.parseInt(password.substring(0, 2));
-            int month = Integer.parseInt(password.substring(2, 4));
-            int id = Integer.parseInt(password.substring(4, 6));
-            LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
-            int resId = Constraint.getImageDataId(id, Constraint.DEFAULT_IMAGE_DATA_ID);
-            MyImage image = new MyImageBuilder().resId(resId).buildMyImage();
-            CollectionOfDay collection = new CollectionOfDayBuilder().date(date).buildCollectionOfDay();
-            collection.addImage(image);
-            return collection;
+            LocalDate date = passwordToDate();
+            int resId = passwordToResId();
+            MyImage image = new MyImage(resId);
+            image.setDate(date.toString());
+            return image;
         } catch (Exception e) {
-            return new CollectionOfDayBuilder().buildCollectionOfDay();
+            return new MyImage("");
         }
+    }
+
+    private LocalDate passwordToDate(){
+        try{
+            int day = Integer.parseInt(password.substring(2, 4)) - 11;
+            int month = Integer.parseInt(password.substring(4, 6)) - 11;
+            LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
+            if(date.compareTo(LocalDate.now()) == 1)
+                return LocalDate.of(date.getYear() - 1, month, day);
+            else return date;
+        } catch (Exception e){
+            return LocalDate.MIN;
+        }
+    }
+
+    private int passwordToResId(){
+        int id = Integer.parseInt(password.substring(0, 2));
+        return Constraint.getImageDataId(id, Constraint.DEFAULT_IMAGE_DATA_ID);
     }
 
     private void setPassword(String number) {

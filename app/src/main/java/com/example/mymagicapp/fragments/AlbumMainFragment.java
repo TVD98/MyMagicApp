@@ -12,19 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mymagicapp.R;
-import com.example.mymagicapp.adapter.RecyclerViewAlbumMainAdapter;
-import com.example.mymagicapp.adapter.RecyclerViewAlbumSettingAdapter;
+import com.example.mymagicapp.adapter.RecyclerViewAlbumAdapter;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.Album;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.Gson;
 
 public class AlbumMainFragment extends Fragment {
-
-    public List<Album> albumList = new ArrayList<>();
     public RecyclerView recyclerView;
-    public RecyclerViewAlbumMainAdapter adapter;
+    public RecyclerViewAlbumAdapter adapter;
+    public Album album;
 
     public AlbumMainFragment() {
         // Required empty public constructor
@@ -36,16 +32,14 @@ public class AlbumMainFragment extends Fragment {
 
         init();
 
-        adapter = new RecyclerViewAlbumMainAdapter(albumList, getActivity());
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(new RecyclerViewAlbumAdapter(album.toArray(), getActivity()));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void init() {
-        String json = Utility.getData(getActivity(), Utility.KEY_NAME_ALBUM);
-        if(json != null){
-            List<Album> list = Utility.albumListFromString(json);
-            albumList.addAll(list);
+        album = Utility.getData(getActivity(), Utility.KEY_NAME_ALBUM, Album.class);
+        if(album == null){
+            album = new Album();
         }
     }
 

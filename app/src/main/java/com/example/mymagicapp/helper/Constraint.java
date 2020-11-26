@@ -3,12 +3,6 @@ package com.example.mymagicapp.helper;
 import com.example.mymagicapp.R;
 
 public class Constraint {
-    public static final int DEFAULT_RES_ID = R.drawable.ic_add_image;
-    public static final int CODE_IMG_GALLERY = 1;
-    public static final int CODE_MULTIPLE_IMG_GALLERY = 2;
-    public static final int ERROR_SAME_DATE = 0;
-    public static final int ERROR_OUT_OF_DATE = 1;
-    public static final int TRUE_DATE = 2;
     public static final int DEFAULT_IMAGE_DATA_ID = 0;
     public static final String TRANSITION_NAME = "TRANSITION_NAME";
 
