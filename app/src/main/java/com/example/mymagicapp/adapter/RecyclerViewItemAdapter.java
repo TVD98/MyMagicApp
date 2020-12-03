@@ -8,7 +8,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -37,7 +36,7 @@ public class RecyclerViewItemAdapter extends RecyclerView.Adapter<RecyclerViewIt
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewItemMainHolder holder, int position) {
         MyImage image = imageList[position];
-        if (image.isImageFromUri()) {
+        if (image.imageIdIsNull()) {
             Glide.with(context).load(image.getUri())
                     .centerCrop()
                     .into(holder.imageView);

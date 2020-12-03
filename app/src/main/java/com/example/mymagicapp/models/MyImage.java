@@ -1,31 +1,19 @@
 package com.example.mymagicapp.models;
 
-import android.net.Uri;
-
-import androidx.annotation.NonNull;
-
-import com.example.mymagicapp.helper.Constraint;
+import com.example.mymagicapp.helper.Constraints;
 import com.example.mymagicapp.helper.Utility;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 
 public class MyImage extends MyItem implements Comparable<MyImage> {
     private String uri = "";
-    private int imageId = Utility.DEFAULT_IMAGE_ID;
+    private int imageId = Constraints.DEFAULT_IMAGE_ID;
 
-    public MyImage(String uri){
-        this.uri = uri;
-    }
+    public MyImage(){ }
 
-    public MyImage(int imageId){
-        this.imageId = imageId;
-    }
-
-    public boolean isImageFromUri(){
-        if(imageId == Utility.DEFAULT_IMAGE_ID)
+    public boolean imageIdIsNull(){
+        if(imageId == Constraints.DEFAULT_IMAGE_ID)
             return true;
         return false;
     }

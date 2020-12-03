@@ -8,12 +8,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.example.mymagicapp.R;
-import com.example.mymagicapp.helper.Constraint;
+import com.example.mymagicapp.helper.Constraints;
+import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.Gallery;
-import com.example.mymagicapp.models.ItemGallery;
 import com.example.mymagicapp.models.MyImage;
-import com.google.gson.Gson;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -105,21 +104,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void saveData() {
         MyImage image = passwordToImage();
-        Gallery gallery = Utility.getData(this, Utility.KEY_NAME_COLLECTION, Gallery.class); // get gallery from shared..
-        gallery.addItem(image, Utility.INDEX_TO_ADD_IMAGE); // add image to gallery
+        Gallery gallery = SaveSystem.getData(this, SaveSystem.KEY_NAME_COLLECTION, Gallery.class); // get gallery from shared..
+        gallery.removeSpecialImage(); // delete last data image
+        gallery.addItem(image, Constraints.INDEX_TO_ADD_IMAGE); // add image to gallery
         gallery.sort();
-        Utility.saveGallery(gallery, this); // save gallery to shared
+        SaveSystem.saveGalleryToShared(gallery, this); // save gallery to shared
     }
 
     private MyImage passwordToImage() {
         try {
             LocalDate date = passwordToDate();
             int resId = passwordToResId();
-            MyImage image = new MyImage(resId);
+            MyImage image = new MyImage();
+            image.setImageId(resId);
             image.setDate(date.toString());
             return image;
         } catch (Exception e) {
-            return new MyImage("");
+            return new MyImage();
         }
     }
 
@@ -138,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private int passwordToResId(){
         int id = Integer.parseInt(password.substring(0, 2));
-        return Constraint.getImageDataId(id, Constraint.DEFAULT_IMAGE_DATA_ID);
+        return Constraints.getSpecialImageId(id, Constraints.DEFAULT_SPECIAL_IMAGE_ID);
     }
 
     private void setPassword(String number) {

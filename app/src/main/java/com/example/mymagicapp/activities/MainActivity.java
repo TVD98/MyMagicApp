@@ -20,7 +20,7 @@ import android.view.View;
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.adapter.MainPagerAdapter;
 import com.example.mymagicapp.helper.Broadcast;
-import com.example.mymagicapp.helper.Constraint;
+import com.example.mymagicapp.helper.Constraints;
 import com.example.mymagicapp.helper.EventManager;
 import com.example.mymagicapp.helper.OnShowImageClickedListener;
 import com.example.mymagicapp.models.MyImage;
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         Gson gson = new Gson();
         intent.putExtra("IMAGE", gson.toJson(image)); // put information of clicked image to intent
         Pair[] pairs = new Pair[1];
-        pairs[0] = new Pair<View, String>(imageView, Constraint.TRANSITION_NAME);
+        pairs[0] = new Pair<View, String>(imageView, Constraints.TRANSITION_NAME);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, pairs);
         startActivity(intent, options.toBundle());
     }

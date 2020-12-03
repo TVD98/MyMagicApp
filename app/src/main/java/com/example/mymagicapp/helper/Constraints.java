@@ -2,9 +2,13 @@ package com.example.mymagicapp.helper;
 
 import com.example.mymagicapp.R;
 
-public class Constraint {
-    public static final int DEFAULT_IMAGE_DATA_ID = 0;
+public class Constraints {
+    public static final int DEFAULT_SPECIAL_IMAGE_ID = 0;
     public static final String TRANSITION_NAME = "TRANSITION_NAME";
+    public static final int SPAN_COUNT_ITEM_IMAGE = 4;
+    public static final int DEFAULT_INDEX_TO_ADD = -1;
+    public static final int INDEX_TO_ADD_IMAGE = 100;
+    public static final int DEFAULT_IMAGE_ID = 0;
 
     public static int[] imageCardIdList = {R.drawable.card_sword_k, R.drawable.card_heart_a, R.drawable.card_heart_2, R.drawable.card_heart_3, R.drawable.card_heart_4, R.drawable.card_heart_5,
             R.drawable.card_heart_6, R.drawable.card_heart_7, R.drawable.card_heart_8, R.drawable.card_heart_9, R.drawable.card_heart_10, R.drawable.card_diamond_a,
@@ -16,8 +20,8 @@ public class Constraint {
             R.drawable.card_heart_q, R.drawable.card_diamond_q, R.drawable.card_club_q, R.drawable.card_sword_q, R.drawable.card_heart_k, R.drawable.card_diamond_k,
             R.drawable.card_club_k};
 
-    public static int getImageDataId(int imgId, int dataId) {
-        if (dataId == DEFAULT_IMAGE_DATA_ID)
+    public static int getSpecialImageId(int imgId, int dataId) {
+        if (dataId == DEFAULT_SPECIAL_IMAGE_ID)
             return imageCardIdList[imgId % imageCardIdList.length];
         else return R.drawable.blank_circle;
     }

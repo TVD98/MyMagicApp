@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mymagicapp.R;
+import com.example.mymagicapp.helper.Constraints;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.ItemGallery;
 
@@ -37,7 +38,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ItemGallery itemGallery = itemGalleries[position];
         holder.textTitle.setText(itemGallery.getTitle());
         holder.recyclerView.setAdapter(new RecyclerViewItemAdapter(itemGallery.toArray(), context));
-        holder.recyclerView.setLayoutManager(new GridLayoutManager(context, Utility.SPAN_COUNT_ITEM_IMAGE));
+        holder.recyclerView.setLayoutManager(new GridLayoutManager(context, Constraints.SPAN_COUNT_ITEM_IMAGE));
     }
 
     @Override

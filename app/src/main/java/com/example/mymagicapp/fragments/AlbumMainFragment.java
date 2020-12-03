@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.adapter.RecyclerViewAlbumAdapter;
+import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.Album;
 import com.google.gson.Gson;
@@ -37,7 +38,7 @@ public class AlbumMainFragment extends Fragment {
     }
 
     private void init() {
-        album = Utility.getData(getActivity(), Utility.KEY_NAME_ALBUM, Album.class);
+        album = SaveSystem.getData(getActivity(), SaveSystem.KEY_NAME_ALBUM, Album.class);
         if(album == null){
             album = new Album();
         }

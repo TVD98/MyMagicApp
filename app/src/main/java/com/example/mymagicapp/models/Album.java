@@ -1,10 +1,9 @@
 package com.example.mymagicapp.models;
 
-import android.net.Uri;
-
-import com.example.mymagicapp.helper.Constraint;
+import com.example.mymagicapp.helper.Constraints;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Album implements IMyCollection{
@@ -12,23 +11,40 @@ public class Album implements IMyCollection{
 
     @Override
     public void addItem(MyItem item, int index) {
-        itemAlbums.add(index, (ItemAlbum) item);
+        if (index == Constraints.INDEX_TO_ADD_IMAGE) {
+            addImage((MyImage) item);
+        } else {
+            itemAlbums.add((ItemAlbum) item);
+        }
     }
 
     @Override
     public void sort() {
-
+        Collections.sort(itemAlbums);
     }
 
-    public void addImage(MyImage image, String nameAlbum){
+    @Override
+    public int size() {
+        return itemAlbums.size();
+    }
+
+    @Override
+    public ItemAlbum[] toArray(){
+        ItemAlbum[] temp = new ItemAlbum[itemAlbums.size()];
+        itemAlbums.toArray(temp);
+        return temp;
+    }
+
+    private void addImage(MyImage image){
+        String nameAlbum = image.getDescription();
         ItemAlbum item = findItemByName(nameAlbum);
         if(item != null){
-            item.addImage(image);
+            item.addItem(image, Constraints.DEFAULT_INDEX_TO_ADD);
         }
         else{
             item = new ItemAlbum();
             item.setName(nameAlbum);
-            item.addImage(image);
+            item.addItem(image, Constraints.DEFAULT_INDEX_TO_ADD);
             itemAlbums.add(item);
         }
     }
@@ -37,13 +53,8 @@ public class Album implements IMyCollection{
         ItemAlbum item = itemAlbums.stream()
                 .filter(x -> x.getName().compareTo(name)==0)
                 .findAny()
-                .orElse(null);
+                .orElse(null); // return null if not found
         return item;
     }
 
-    public ItemAlbum[] toArray(){
-        ItemAlbum[] temp = new ItemAlbum[itemAlbums.size()];
-        itemAlbums.toArray(temp);
-        return temp;
-    }
 }

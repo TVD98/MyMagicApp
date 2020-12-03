@@ -4,22 +4,15 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.example.mymagicapp.R;
-import com.example.mymagicapp.helper.Constraint;
 import com.example.mymagicapp.helper.EventManager;
-import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.MyImage;
 import com.github.chrisbanes.photoview.PhotoView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ShowImagePagerAdapter extends PagerAdapter {
     public MyImage[] imageList;
@@ -45,7 +38,7 @@ public class ShowImagePagerAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         PhotoView imageView = new PhotoView(context);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        if (imageList[position].isImageFromUri()) {
+        if (imageList[position].imageIdIsNull()) {
             Glide.with(context).load(imageList[position].getUri())
                     .fitCenter()
                     .error(R.drawable.ic_add_image)

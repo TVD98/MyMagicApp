@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.adapter.RecyclerViewAdapter;
+import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.Gallery;
 import com.example.mymagicapp.models.MyImage;
@@ -42,7 +43,7 @@ public class CollectionMainFragment extends Fragment {
     }
 
     private void init() {
-        gallery = Utility.getData(getActivity(), Utility.KEY_NAME_COLLECTION, Gallery.class);
+        gallery = SaveSystem.getData(getActivity(), SaveSystem.KEY_NAME_COLLECTION, Gallery.class);
         if(gallery == null)
             gallery = new Gallery();
     }

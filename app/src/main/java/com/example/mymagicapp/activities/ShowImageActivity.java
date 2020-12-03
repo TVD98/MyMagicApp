@@ -6,22 +6,16 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.adapter.ShowImagePagerAdapter;
 import com.example.mymagicapp.helper.EventManager;
 import com.example.mymagicapp.helper.OnPhotoViewClickedListener;
-import com.example.mymagicapp.helper.Utility;
+import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.models.MyImage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ShowImageActivity extends AppCompatActivity {
     public MyImage[] imageList;
@@ -55,7 +49,7 @@ public class ShowImageActivity extends AppCompatActivity {
 
         init();
 
-        int currentId = getCurrentImageId();
+        int currentId = getCurrentImageIndex();
         changeTitleToolBar(currentId);
 
         viewPager.setAdapter(new ShowImagePagerAdapter(imageList, this));
@@ -103,7 +97,7 @@ public class ShowImageActivity extends AppCompatActivity {
     }
 
     private void init() {
-        imageList = Utility.getData(this, Utility.KEY_NAME_IMAGE_LIST, MyImage[].class);
+        imageList = SaveSystem.getData(this, SaveSystem.KEY_NAME_IMAGE_LIST, MyImage[].class);
         if(imageList == null)
             imageList = new MyImage[0];
     }
@@ -117,6 +111,7 @@ public class ShowImageActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        toolbar.setVisibility(View.INVISIBLE);
         bottomNavigationView.setVisibility(View.INVISIBLE);
         super.onBackPressed();
     }
@@ -135,7 +130,7 @@ public class ShowImageActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(imageList[pos].getTitle());
     }
 
-    private int getCurrentImageId() {
+    private int getCurrentImageIndex() {
         int len = imageList.length;
         for (int i = 0; i< len; i++)
         {

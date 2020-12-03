@@ -13,9 +13,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.mymagicapp.R;
+import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.helper.Utility;
-import com.example.mymagicapp.models.Gallery;
-import com.google.firebase.storage.StorageReference;
 
 public class SettingActivity extends AppCompatActivity {
     private static final int MY_READ_PERMISSION_CODE = 101;
@@ -32,24 +31,24 @@ public class SettingActivity extends AppCompatActivity {
         buttonSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                syncCollection();
+                syncGallery();
             }
         });
     }
 
-    public void syncCollection(){
+    public void syncGallery(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     MY_READ_PERMISSION_CODE);
         }
         else{
-            startSyncing();
+            startSyncingGallery();
         }
     }
 
-    private void startSyncing() {
-        Utility.saveRealGalleryToSharedAndFirebase(this);
+    private void startSyncingGallery() {
+        SaveSystem.findAndSaveGalleryToShared(this);
         Toast.makeText(this, "Đồng bộ với bộ sưu tập thành công", Toast.LENGTH_SHORT).show(); // display successful sync
     }
 
@@ -58,7 +57,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == MY_READ_PERMISSION_CODE){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                startSyncing();
+                startSyncingGallery();
             }
         }
     }

@@ -34,13 +34,12 @@ public class RecyclerViewAlbumAdapter extends RecyclerView.Adapter<RecyclerViewA
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAlbumMainHolder holder, int position) {
         ItemAlbum itemAlbum = itemAlbumList[position];
-        MyImage image = itemAlbum.getCurrentImage();
-        Glide.with(context).load(image.getUri())
+        Glide.with(context).load(itemAlbum.getUriOfFirstImage())
                 .centerCrop()
                 .error(R.drawable.like)
                 .into(holder.imageView);
         holder.textTitle.setText(itemAlbum.getTitle());
-        holder.textAmount.setText(Integer.toString(itemAlbum.getAmount()));
+        holder.textAmount.setText(Integer.toString(itemAlbum.size()));
     }
 
     @Override

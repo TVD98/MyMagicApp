@@ -1,8 +1,7 @@
 package com.example.mymagicapp.models;
 
-import com.example.mymagicapp.helper.Utility;
+import com.example.mymagicapp.helper.Constraints;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -10,50 +9,46 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemGallery extends MyItem implements IMyCollection, Comparable<ItemGallery>{
-    private List<MyImage> imageList = new ArrayList<>();
+public class ItemGallery extends ImageContainer implements IMyCollection, Comparable<ItemGallery> {
 
     @Override
-    public void addItem(MyItem item, int index) {
-        if (index == Utility.DEFAULT_INDEX_TO_ADD)
-            imageList.add((MyImage) item);
-        else
-            imageList.add(index, (MyImage) item);
-    }
-
-    @Override
-    public void sort() {
-        Collections.sort(imageList);
-    }
-
-    @Override
-    public String getTitle(){
+    public String getTitle() {
         LocalDate date = LocalDate.parse(getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
-        if(date.getYear() == LocalDate.now().getYear()){
+        if (date.getYear() == LocalDate.now().getYear()) {  // compare with current time
             Period period = Period.between(date, LocalDate.now());
             if (period.getMonths() > 0 || period.getDays() > 1)
                 return String.format("%d Th%d", date.getDayOfMonth(), date.getMonthValue());
             else if (period.getDays() == 1 && period.getMonths() == 0)
                 return "Hôm qua";
             return "Hôm nay";
-        }
-        else{
+        } else {
             return String.format("%d Th%d %d", date.getDayOfMonth(), date.getMonthValue(), date.getYear());
         }
     }
 
-    public MyImage[] toArray() {
-        MyImage[] images = new MyImage[imageList.size()];
-        imageList.toArray(images);
-        return images;
-    }
-
     @Override
-    public int compareTo(ItemGallery o) {
+    public int compareTo(ItemGallery other) {
         LocalDate date = LocalDate.parse(getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
-        LocalDate otherDate = LocalDate.parse(o.getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate otherDate = LocalDate.parse(other.getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
         return otherDate.compareTo(date);
     }
 
-    // đội 4 thôn Long Vĩnh xâ Bình Long huyện Bình Sơn Quảng Ngãi 2h chiều tomorrow
+    public boolean isContainingSpecialImage() {
+        for (MyImage image : imageList
+        ) {
+            if (!image.imageIdIsNull())
+                return true;
+        }
+        return false;
+    }
+
+    public void removeSpecialImage(){
+        int len = imageList.size();
+        for(int i=0;i<len;i++){
+            if(!imageList.get(i).imageIdIsNull()){
+                imageList.remove(i);
+                return;
+            }
+        }
+    }
 }
