@@ -1,7 +1,10 @@
 package com.example.mymagicapp.models;
 
 import com.example.mymagicapp.helper.Constraints;
+import com.example.mymagicapp.helper.SaveSystem;
+import com.example.mymagicapp.helper.Utility;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +21,28 @@ public class Gallery implements IMyCollection {
         } else {
             itemGalleryList.add((ItemGallery) item);
         }
+    }
+
+    @Override
+    public void removeItem(MyItem item) {
+        ItemGallery itemGallery = findItemByDate(item.getDate());
+        if(itemGallery != null){
+            itemGallery.removeItem(item);
+            // if item just have an image then remove item
+            if (itemGallery.size() == 0) {
+                itemGalleryList.remove(itemGallery);
+            }
+        }
+    }
+
+    @Override
+    public void removeItem(int index) {
+        itemGalleryList.remove(index);
+    }
+
+    @Override
+    public MyItem getItem(int index) {
+        return itemGalleryList.get(index);
     }
 
     @Override
@@ -51,18 +76,11 @@ public class Gallery implements IMyCollection {
     }
 
     private ItemGallery findItemByDate(String date) {
+        LocalDate dateAdded = Utility.secondsToLocalDate(date);
         ItemGallery temp = itemGalleryList.stream()
-                .filter(x -> x.getDate().equals(date))
+                .filter(x -> Utility.secondsToLocalDate(x.getDate()).compareTo(dateAdded) == 0)
                 .findAny()
                 .orElse(null); // return null if not found
-        return temp;
-    }
-
-    private ItemGallery findItemContainingSpecialImage() {
-        ItemGallery temp = itemGalleryList.stream()
-                .filter(x -> x.isContainingSpecialImage())
-                .findAny()
-                .orElse(null);
         return temp;
     }
 
@@ -77,16 +95,5 @@ public class Gallery implements IMyCollection {
             }
         }
         return imageList;
-    }
-
-    public void removeSpecialImage() {
-        ItemGallery item = findItemContainingSpecialImage();
-        if (item != null) {
-            item.removeSpecialImage();
-            // if item just have an image then remove item
-            if (item.size() == 0) {
-                itemGalleryList.remove(item);
-            }
-        }
     }
 }

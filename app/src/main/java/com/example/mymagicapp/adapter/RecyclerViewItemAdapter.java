@@ -53,6 +53,15 @@ public class RecyclerViewItemAdapter extends RecyclerView.Adapter<RecyclerViewIt
                 EventManager.getInstance().showImageClickedListener.onShowImageClicked(datas);
             }
         });
+
+        holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Object[] datas = {image};
+                EventManager.getInstance().showImageLongClickedListener.onShowImageLongClicked(datas);
+                return true;
+            }
+        });
     }
 
     @Override

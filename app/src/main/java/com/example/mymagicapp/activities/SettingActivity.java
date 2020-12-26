@@ -14,11 +14,11 @@ import android.widget.Toast;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.helper.SaveSystem;
-import com.example.mymagicapp.helper.Utility;
+
 
 public class SettingActivity extends AppCompatActivity {
     private static final int MY_READ_PERMISSION_CODE = 101;
-    Button buttonSync;
+    private Button buttonSync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +36,12 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    public void syncGallery(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+    private void syncGallery() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,},
                     MY_READ_PERMISSION_CODE);
-        }
-        else{
+        } else {
             startSyncingGallery();
         }
     }
@@ -55,11 +54,10 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == MY_READ_PERMISSION_CODE){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == MY_READ_PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startSyncingGallery();
             }
         }
     }
-
 }

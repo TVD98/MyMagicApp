@@ -1,12 +1,16 @@
 package com.example.mymagicapp.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.adapter.ShowImagePagerAdapter;
@@ -16,6 +20,7 @@ import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.models.MyImage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
+
 
 public class ShowImageActivity extends AppCompatActivity {
     public MyImage[] imageList;
@@ -90,21 +95,14 @@ public class ShowImageActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bottomNavigationView.setVisibility(View.VISIBLE);
-    }
-
     private void init() {
         imageList = SaveSystem.getData(this, SaveSystem.KEY_NAME_IMAGE_LIST, MyImage[].class);
-        if(imageList == null)
+        if (imageList == null)
             imageList = new MyImage[0];
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        bottomNavigationView.setVisibility(View.INVISIBLE);
         onBackPressed();
         return true;
     }
@@ -127,14 +125,15 @@ public class ShowImageActivity extends AppCompatActivity {
     }
 
     private void changeTitleToolBar(int pos) {
-        getSupportActionBar().setTitle(imageList[pos].getTitle());
+        MyImage image = imageList[pos];
+        getSupportActionBar().setTitle(image.title());
+        getSupportActionBar().setSubtitle(image.subTitle());
     }
 
     private int getCurrentImageIndex() {
         int len = imageList.length;
-        for (int i = 0; i< len; i++)
-        {
-            if(imageList[i].compareTo(currentImage)==0)
+        for (int i = 0; i < len; i++) {
+            if (imageList[i].getUri().compareTo(currentImage.getUri()) == 0) // the same uri
                 return i;
         }
         return 0;

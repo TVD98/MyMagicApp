@@ -1,10 +1,12 @@
 package com.example.mymagicapp.models;
 
+import com.example.mymagicapp.helper.Constraints;
+
 import java.time.LocalDate;
 
-public abstract class MyItem {
+public abstract class MyItem implements Comparable<MyItem>{
     private String name = "";
-    private String date = LocalDate.MIN.toString();
+    private String date = Constraints.LOCAL_DATE_TIME_MIN;
     private String description = "";
 
     public MyItem(){}
@@ -33,5 +35,16 @@ public abstract class MyItem {
         this.name = name;
     }
 
-    public abstract String getTitle();
+    public String title(){
+        return getName();
+    }
+
+    public String subTitle(){
+        return "";
+    }
+
+    @Override
+    public int compareTo(MyItem other) {
+        return other.getDate().compareTo(this.getDate());
+    }
 }

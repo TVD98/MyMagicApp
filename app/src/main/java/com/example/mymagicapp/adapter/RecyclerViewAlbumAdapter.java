@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.models.ItemAlbum;
-import com.example.mymagicapp.models.MyImage;
 
 public class RecyclerViewAlbumAdapter extends RecyclerView.Adapter<RecyclerViewAlbumAdapter.RecyclerViewAlbumMainHolder> {
     public ItemAlbum[] itemAlbumList;
@@ -34,11 +33,11 @@ public class RecyclerViewAlbumAdapter extends RecyclerView.Adapter<RecyclerViewA
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAlbumMainHolder holder, int position) {
         ItemAlbum itemAlbum = itemAlbumList[position];
-        Glide.with(context).load(itemAlbum.getUriOfFirstImage())
+        Glide.with(context).load(itemAlbum.uriOfFirstImage())
                 .centerCrop()
                 .error(R.drawable.like)
                 .into(holder.imageView);
-        holder.textTitle.setText(itemAlbum.getTitle());
+        holder.textTitle.setText(itemAlbum.title());
         holder.textAmount.setText(Integer.toString(itemAlbum.size()));
     }
 

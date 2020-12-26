@@ -19,6 +19,21 @@ public class Album implements IMyCollection{
     }
 
     @Override
+    public void removeItem(MyItem item) {
+
+    }
+
+    @Override
+    public void removeItem(int index) {
+        itemAlbums.remove(index);
+    }
+
+    @Override
+    public ItemAlbum getItem(int index) {
+        return itemAlbums.get(index);
+    }
+
+    @Override
     public void sort() {
         Collections.sort(itemAlbums);
     }
@@ -33,6 +48,13 @@ public class Album implements IMyCollection{
         ItemAlbum[] temp = new ItemAlbum[itemAlbums.size()];
         itemAlbums.toArray(temp);
         return temp;
+    }
+
+    public MyImage findImageByName(String albumName, String imageName){
+        ItemAlbum item = findItemByName(albumName);
+        if(item != null)
+            return item.findByName(imageName);
+        return null;
     }
 
     private void addImage(MyImage image){

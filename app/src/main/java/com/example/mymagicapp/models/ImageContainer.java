@@ -12,7 +12,7 @@ public class ImageContainer extends MyItem implements IMyCollection{
     public ImageContainer(){}
 
     @Override
-    public String getTitle() {
+    public String title() {
         return getName();
     }
 
@@ -22,6 +22,28 @@ public class ImageContainer extends MyItem implements IMyCollection{
             imageList.add((MyImage) item);
         else
             imageList.add(index, (MyImage) item);
+        this.sort(); // sort after add image.
+    }
+
+    @Override
+    public void removeItem(MyItem item) {
+        for (MyImage image: imageList
+             ) {
+            if(image.compareTo((MyImage)item) == 0){
+                imageList.remove(image);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void removeItem(int index) {
+        imageList.remove(index);
+    }
+
+    @Override
+    public MyItem getItem(int index) {
+        return imageList.get(index);
     }
 
     @Override
@@ -39,6 +61,15 @@ public class ImageContainer extends MyItem implements IMyCollection{
         MyImage[] myImages = new MyImage[imageList.size()];
         imageList.toArray(myImages);
         return myImages;
+    }
+
+    public MyImage findByName(String imageName){
+        for (MyImage image: imageList
+             ) {
+            if(image.getName() == imageName)
+                return image;
+        }
+        return null;
     }
 
 }

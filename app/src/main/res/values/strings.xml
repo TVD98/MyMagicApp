@@ -7,4 +7,8 @@
     values-round/strings.xml for round devices.
     -->
     <string name="transition_name">TRANSITION_NAME</string>
+    <string name="facebook_app_id">301380224536705</string>
+    <string name="fb_login_protocol_scheme">fb301380224536705</string>
+
+
 </resources>

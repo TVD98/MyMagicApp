@@ -1,37 +1,22 @@
 package com.example.mymagicapp.helper;
 
-import android.app.Activity;
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
-import com.example.mymagicapp.models.Album;
-import com.example.mymagicapp.models.Gallery;
-import com.example.mymagicapp.models.MyImage;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.File;
-import java.lang.reflect.Type;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.content.ContentValues.TAG;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Random;
 
 public class Utility {
 
@@ -53,4 +38,29 @@ public class Utility {
         return secondsToLocalDate(second);
     }
 
+    public static LocalDateTime secondsToLocalDateTime(long seconds){
+        return Instant.ofEpochSecond(seconds).atZone(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDateTime();
+    }
+
+    public static LocalDateTime secondsToLocalDateTime(String seconds) {
+        long second = Long.parseLong(seconds);
+        return secondsToLocalDateTime(second);
+    }
+
+    public static String localDateTimeToString(LocalDateTime dateTime){
+        return Long.toString(dateTime.toEpochSecond(ZoneOffset.UTC));
+    }
+
+    public static String localTimeToString(LocalTime time){
+        return time.format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
+
+    public static LocalTime randomTime(int timeStart, int timeEnd){
+        final Random random = new Random();
+        final int millisInDayOfTimeStart = timeStart * Constraints.MINUTE_COUNT_IN_HOUR * Constraints.MILLIS_COUNT_IN_MINUTE;
+        final int millisInDayOfTimeEnd = timeEnd * Constraints.MINUTE_COUNT_IN_HOUR * Constraints.MILLIS_COUNT_IN_MINUTE;
+        int range = millisInDayOfTimeEnd - millisInDayOfTimeStart;
+        int rd = random.nextInt(range);
+        return LocalTime.ofSecondOfDay(millisInDayOfTimeStart + rd);
+    }
 }

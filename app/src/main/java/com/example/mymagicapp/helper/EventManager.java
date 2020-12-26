@@ -10,6 +10,7 @@ public class EventManager {
     }
 
     public OnShowImageClickedListener showImageClickedListener;
+    public OnShowImageLongClickedListener showImageLongClickedListener;
     public OnPhotoViewClickedListener photoViewClickedListener;
 
     public void setOnShowImageClickedListener(OnShowImageClickedListener listener){
@@ -18,5 +19,9 @@ public class EventManager {
 
     public void setOnPhotoViewClickedListener(OnPhotoViewClickedListener listener){
         this.photoViewClickedListener = listener;
+    }
+
+    public void setOnShowImageLongClickedListener(OnShowImageLongClickedListener listener){
+        this.showImageLongClickedListener = listener;
     }
 }

@@ -11,10 +11,14 @@ import com.example.mymagicapp.R;
 import com.example.mymagicapp.helper.Constraints;
 import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.helper.Utility;
+import com.example.mymagicapp.models.Album;
 import com.example.mymagicapp.models.Gallery;
+import com.example.mymagicapp.models.ItemAlbum;
 import com.example.mymagicapp.models.MyImage;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,41 +109,43 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void saveData() {
         MyImage image = passwordToImage();
         Gallery gallery = SaveSystem.getData(this, SaveSystem.KEY_NAME_COLLECTION, Gallery.class); // get gallery from shared..
-        gallery.removeSpecialImage(); // delete last data image
+        MyImage lastSpecialImage = SaveSystem.getData(this, SaveSystem.KEY_NAME_SPECIAL_IMAGE, MyImage.class); // get last special image
+        if (lastSpecialImage != null) {
+            gallery.removeItem(lastSpecialImage); // delete last data image
+        }
         gallery.addItem(image, Constraints.INDEX_TO_ADD_IMAGE); // add image to gallery
         gallery.sort();
         SaveSystem.saveGalleryToShared(gallery, this); // save gallery to shared
+        SaveSystem.saveData(this, SaveSystem.KEY_NAME_SPECIAL_IMAGE, image); // save special image selected
     }
 
     private MyImage passwordToImage() {
         try {
-            LocalDate date = passwordToDate();
-            int resId = passwordToResId();
-            MyImage image = new MyImage();
-            image.setImageId(resId);
-            image.setDate(date.toString());
+            String id = password.substring(0, 2);
+            ItemAlbum album = SaveSystem.getDataAlbum(this, Constraints.CARD_DATA_ID);
+            MyImage image = album.findByName(id);
+            LocalDateTime dateTime = passwordToDateTime();
+            image.setDate(Utility.localDateTimeToString(dateTime));
             return image;
         } catch (Exception e) {
             return new MyImage();
         }
     }
 
-    private LocalDate passwordToDate(){
-        try{
+    private LocalDateTime passwordToDateTime() {
+        try {
             int day = Integer.parseInt(password.substring(2, 4)) - 11;
             int month = Integer.parseInt(password.substring(4, 6)) - 11;
             LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
-            if(date.compareTo(LocalDate.now()) == 1)
-                return LocalDate.of(date.getYear() - 1, month, day);
-            else return date;
-        } catch (Exception e){
-            return LocalDate.MIN;
+            LocalTime time = Utility.randomTime(8, 20); // random time from 8AM to 20PM
+            LocalDateTime dateTime;
+            if (date.compareTo(LocalDate.now()) == 1)
+                date = LocalDate.of(date.getYear() - 1, month, day);
+            dateTime = date.atTime(time);
+            return dateTime;
+        } catch (Exception e) {
+            return LocalDateTime.MIN;
         }
-    }
-
-    private int passwordToResId(){
-        int id = Integer.parseInt(password.substring(0, 2));
-        return Constraints.getSpecialImageId(id, Constraints.DEFAULT_SPECIAL_IMAGE_ID);
     }
 
     private void setPassword(String number) {

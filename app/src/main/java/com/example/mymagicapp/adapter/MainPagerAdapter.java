@@ -9,26 +9,28 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.mymagicapp.fragments.AlbumMainFragment;
 import com.example.mymagicapp.fragments.CollectionMainFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainPagerAdapter extends FragmentStateAdapter {
+    List<Fragment> fragments = new ArrayList<>();
 
     public MainPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
+        fragments.add(new CollectionMainFragment());
+        fragments.add(new AlbumMainFragment());
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position){
-            case 0:
-                return new CollectionMainFragment();
-            default:
-                return new AlbumMainFragment();
-        }
+        return fragments.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return fragments.size();
     }
+
 }

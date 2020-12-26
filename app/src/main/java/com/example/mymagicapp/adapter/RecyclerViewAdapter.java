@@ -7,22 +7,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.helper.Constraints;
-import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.ItemGallery;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewMainHolder> {
-    public ItemGallery[] itemGalleries;
-    public Context context;
+    private ItemGallery[] itemGalleries;
+    private RecyclerViewItemAdapter[] recyclerViewItemAdapters;
+    private Context context;
 
     public RecyclerViewAdapter(ItemGallery[] itemGalleries, Context context) {
         this.itemGalleries = itemGalleries;
+        this.recyclerViewItemAdapters = new RecyclerViewItemAdapter[itemGalleries.length];
         this.context = context;
+
     }
 
     @NonNull
@@ -36,8 +37,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewMainHolder holder, int position) {
         ItemGallery itemGallery = itemGalleries[position];
-        holder.textTitle.setText(itemGallery.getTitle());
-        holder.recyclerView.setAdapter(new RecyclerViewItemAdapter(itemGallery.toArray(), context));
+        holder.textTitle.setText(itemGallery.title());
+        recyclerViewItemAdapters[position] = new RecyclerViewItemAdapter(itemGallery.toArray(), context); // create recycleViewItemAdapter
+        holder.recyclerView.setAdapter(recyclerViewItemAdapters[position]);
         holder.recyclerView.setLayoutManager(new GridLayoutManager(context, Constraints.SPAN_COUNT_ITEM_IMAGE));
     }
 

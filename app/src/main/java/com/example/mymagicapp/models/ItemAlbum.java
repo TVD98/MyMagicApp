@@ -8,17 +8,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemAlbum extends ImageContainer implements Comparable<ItemAlbum>{
+public class ItemAlbum extends ImageContainer{
     public ItemAlbum(){ }
 
-    public String getUriOfFirstImage(){
+    public String uriOfFirstImage(){
         if(size() == 0) // list is null
             return null;
         else return imageList.get(0).getUri(); // get uri of first image
     }
 
-    @Override
-    public int compareTo(ItemAlbum other) {
-        return getName().compareTo(other.getName());
-    }
 }
