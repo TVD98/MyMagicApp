@@ -2,18 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/itemRemove"
-        android:icon="@drawable/ic_delete_file"
-        android:title="Remove"
-        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/itemSync"
+        android:title="Sync" />
 
-    <item android:id="@+id/itemAdd"
-        android:icon="@drawable/ic_add_file"
-        android:title="Add"
-        app:showAsAction="ifRoom"/>
-
-    <item android:id="@+id/itemSave"
-        android:icon="@drawable/ic_save"
-        android:title="Save"
-        app:showAsAction="ifRoom"/>
 </menu>
