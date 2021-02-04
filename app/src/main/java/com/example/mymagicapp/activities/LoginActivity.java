@@ -122,8 +122,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private MyImage passwordToImage() {
         String id = password.substring(0, 2);
-        ItemAlbum album = SaveSystem.getDataAlbum(this, Constraints.CARD_DATA_ID);
-        MyImage image = album.findByName(id);
+        int dataId = SaveSystem.getDataId(this);
+        ItemAlbum album = SaveSystem.getDataAlbum(this, dataId);
+        MyImage image = album.findByName(Integer.toString(Integer.parseInt(id)));
         LocalDateTime dateTime = passwordToDateTime();
         image.setDate(Utility.localDateTimeToString(dateTime));
         return image;

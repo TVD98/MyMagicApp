@@ -20,6 +20,7 @@ public class SaveSystem {
     public static final String KEY_NAME_SPECIAL_IMAGE = "special_image";
     public static final String KEY_NAME_CODE_ID = "code_id";
     public static final String KEY_NAME_DATA = "data";
+    public static final String DATA_ID = "data_id";
 
     public static void saveData(Context context, String keyDataName, Object data) {
         Gson gson = new Gson();
@@ -89,6 +90,17 @@ public class SaveSystem {
     public static ItemAlbum getDataAlbum(Context context, int dataId){
         Album data = getData(context, KEY_NAME_DATA, Album.class);
         return data.getItem(dataId);
+    }
+
+    public static void saveDataId(int id, Context context){
+        saveString(context, DATA_ID, Integer.toString(id));
+    }
+
+    public static int getDataId(Context context){
+        String id = getString(context, DATA_ID);
+        if(id != null)
+            return Integer.parseInt(id);
+        else return Constraints.CARD_DATA_ID;
     }
 
 }

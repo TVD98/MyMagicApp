@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -109,6 +110,28 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+            changeDataId(-1);
+        }
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+            changeDataId(1);
+        }
+        return true;
+    }
+
+    private void changeDataId(int result) {
+        int id = SaveSystem.getDataId(this);
+        id += result;
+        if (id < 0)
+            id = 1;
+        if (id > 1)
+            id = 0;
+        Toast.makeText(this, Integer.toString(id), Toast.LENGTH_LONG).show();
+        SaveSystem.saveDataId(id, this);
     }
 
     private void startShowImageActivity(View imageView, MyImage image) {

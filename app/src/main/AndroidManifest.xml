@@ -50,9 +50,10 @@
 
         <receiver android:name=".helper.Broadcast">
             <intent-filter>
-                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.SCREEN_OFF"/>
             </intent-filter>
         </receiver>
+
 
     </application>
 

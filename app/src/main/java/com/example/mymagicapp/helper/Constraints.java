@@ -31,11 +31,6 @@ public class Constraints {
 
     public static int[] imageFoodIdList = {R.drawable.anh_nen_1, R.drawable.anh_nen_2, R.drawable.anh_nen_3};
 
-    public static int getSpecialImageId(int imgId, int dataId) {
-        if (dataId == DEFAULT_SPECIAL_IMAGE_ID)
-            return imageCardIdList[imgId % imageCardIdList.length];
-        else return R.drawable.blank_circle;
-    }
 
     public static Album getImageDataAlbum() {
         Album album = new Album();
