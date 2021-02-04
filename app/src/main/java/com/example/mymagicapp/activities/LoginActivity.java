@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.helper.Constraints;
@@ -120,32 +121,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private MyImage passwordToImage() {
-        try {
-            String id = password.substring(0, 2);
-            ItemAlbum album = SaveSystem.getDataAlbum(this, Constraints.CARD_DATA_ID);
-            MyImage image = album.findByName(id);
-            LocalDateTime dateTime = passwordToDateTime();
-            image.setDate(Utility.localDateTimeToString(dateTime));
-            return image;
-        } catch (Exception e) {
-            return new MyImage();
-        }
+        String id = password.substring(0, 2);
+        ItemAlbum album = SaveSystem.getDataAlbum(this, Constraints.CARD_DATA_ID);
+        MyImage image = album.findByName(id);
+        LocalDateTime dateTime = passwordToDateTime();
+        image.setDate(Utility.localDateTimeToString(dateTime));
+        return image;
     }
 
     private LocalDateTime passwordToDateTime() {
-        try {
-            int day = Integer.parseInt(password.substring(2, 4)) - 11;
-            int month = Integer.parseInt(password.substring(4, 6)) - 11;
-            LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
-            LocalTime time = Utility.randomTime(8, 20); // random time from 8AM to 20PM
-            LocalDateTime dateTime;
-            if (date.compareTo(LocalDate.now()) == 1)
-                date = LocalDate.of(date.getYear() - 1, month, day);
-            dateTime = date.atTime(time);
-            return dateTime;
-        } catch (Exception e) {
-            return LocalDateTime.MIN;
-        }
+        int day = Integer.parseInt(password.substring(2, 4)) - 10;
+        int month = Integer.parseInt(password.substring(4, 6)) - 10;
+        LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
+        LocalTime time = Utility.randomTime(8, 20); // random time from 8AM to 20PM
+        LocalDateTime dateTime;
+        if (date.compareTo(LocalDate.now()) > 0)
+            date = LocalDate.of(date.getYear() - 1, month, day);
+        dateTime = date.atTime(time);
+        return dateTime;
     }
 
     private void setPassword(String number) {

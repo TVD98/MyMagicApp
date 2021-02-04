@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ImageContainer extends MyItem implements IMyCollection{
+public class ImageContainer extends MyItem implements IMyCollection {
     protected List<MyImage> imageList = new ArrayList<>();
 
-    public ImageContainer(){}
+    public ImageContainer() {
+    }
 
     @Override
     public String title() {
@@ -27,9 +28,9 @@ public class ImageContainer extends MyItem implements IMyCollection{
 
     @Override
     public void removeItem(MyItem item) {
-        for (MyImage image: imageList
-             ) {
-            if(image.compareTo((MyImage)item) == 0){
+        for (MyImage image : imageList
+        ) {
+            if (image.compareTo((MyImage) item) == 0) {
                 imageList.remove(image);
                 return;
             }
@@ -63,10 +64,10 @@ public class ImageContainer extends MyItem implements IMyCollection{
         return myImages;
     }
 
-    public MyImage findByName(String imageName){
-        for (MyImage image: imageList
-             ) {
-            if(image.getName() == imageName)
+    public MyImage findByName(String imageName) {
+        for (MyImage image : imageList
+        ) {
+            if (image.getName().compareTo(imageName) == 0)
                 return image;
         }
         return null;

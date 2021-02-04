@@ -23,7 +23,7 @@ public class ItemGallery extends ImageContainer implements IMyCollection{
                 return "Hôm qua";
             return "Hôm nay";
         } else {
-            return String.format("%d Th%d %d", date.getDayOfMonth(), date.getMonthValue(), date.getYear());
+            return String.format("%d Thg%d %d", date.getDayOfMonth(), date.getMonthValue(), date.getYear());
         }
     }
 }
