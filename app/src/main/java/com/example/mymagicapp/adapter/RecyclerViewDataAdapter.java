@@ -51,6 +51,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         return myImages.length;
     }
 
+
     public class RecyclerViewDataHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
         public TextView textView;
