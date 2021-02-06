@@ -1,7 +1,10 @@
 package com.example.mymagicapp.helper;
 
+import android.content.Context;
+
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.models.Album;
+import com.example.mymagicapp.models.ItemAlbum;
 import com.example.mymagicapp.models.MyImage;
 
 public class Constraints {
@@ -17,7 +20,8 @@ public class Constraints {
     public static final int CODE_ID_LENGTH = 8;
     public static final int CARD_DATA_ID = 0;
     public static final int FOOD_DATA_ID = 1;
-    public static final int YOUR_DATA_ID = 2;
+    public static final int OPTION_DATA_ID = 2;
+    public static final int MAX_DATA_COUNT = 3;
 
     public static int[] imageCardIdList = {R.drawable.card_heart_a, R.drawable.card_heart_2, R.drawable.card_heart_3, R.drawable.card_heart_4, R.drawable.card_heart_5,
             R.drawable.card_heart_6, R.drawable.card_heart_7, R.drawable.card_heart_8, R.drawable.card_heart_9, R.drawable.card_heart_10, R.drawable.card_diamond_a,
@@ -31,25 +35,20 @@ public class Constraints {
 
     public static int[] imageFoodIdList = {R.drawable.anh_nen_1, R.drawable.anh_nen_2, R.drawable.anh_nen_3};
 
+    public static int[] imageOptionIdList = {R.drawable.like};
 
-    public static Album getImageDataAlbum() {
-        Album album = new Album();
-        int cardIdListLength = imageCardIdList.length;
+    public static ItemAlbum imageListToItemAlbum(int[] list, String nameAlbum){
+        ItemAlbum itemAlbum = new ItemAlbum();
+        itemAlbum.setName(nameAlbum);
+        int cardIdListLength = list.length;
         for (int i = 0; i < cardIdListLength; i++) {
             MyImage image = new MyImage();
-            image.setImageId(imageCardIdList[i]);
+            image.setImageId(list[i]);
             image.setName(Integer.toString(i + 1));
-            image.setDescription(Integer.toString(CARD_DATA_ID));
-            album.addItem(image, Constraints.INDEX_TO_ADD_IMAGE);
+            image.setDescription(nameAlbum);
+            itemAlbum.addItem(image, DEFAULT_INDEX_TO_ADD);
         }
-        int foodIdListLength = imageFoodIdList.length;
-        for (int i = 0; i < foodIdListLength; i++) {
-            MyImage image = new MyImage();
-            image.setImageId(imageFoodIdList[i]);
-            image.setName(Integer.toString(i + 1));
-            image.setDescription(Integer.toString(FOOD_DATA_ID));
-            album.addItem(image, Constraints.INDEX_TO_ADD_IMAGE);
-        }
-        return album;
+        return itemAlbum;
     }
+
 }

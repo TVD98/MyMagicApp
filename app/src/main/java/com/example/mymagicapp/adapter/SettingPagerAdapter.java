@@ -7,8 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.mymagicapp.fragments.CardDataFragment;
-import com.example.mymagicapp.fragments.FoodDataFragment;
-import com.example.mymagicapp.fragments.OptionDataFragment;
+import com.example.mymagicapp.helper.Constraints;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +18,9 @@ public class SettingPagerAdapter extends FragmentStateAdapter {
 
     public SettingPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
-        fragments.add(new CardDataFragment());
-        fragments.add(new FoodDataFragment());
-        fragments.add(new OptionDataFragment());
+        fragments.add(new CardDataFragment(Constraints.CARD_DATA_ID));
+        fragments.add(new CardDataFragment(Constraints.FOOD_DATA_ID));
+        fragments.add(new CardDataFragment(Constraints.OPTION_DATA_ID));
     }
 
     @NonNull

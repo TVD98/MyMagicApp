@@ -36,11 +36,13 @@ public class CardDataFragment extends Fragment {
     RecyclerView recyclerView;
     EditText editText;
     RecyclerViewDataAdapter adapter;
+    ItemAlbum album;
     MyImage[] myImages;
+    private int dataId;
     private int itemSelected;
 
-    public CardDataFragment() {
-
+    public CardDataFragment(int dataId) {
+        this.dataId = dataId;
     }
 
     @Override
@@ -95,6 +97,8 @@ public class CardDataFragment extends Fragment {
             int stt = Integer.parseInt(number);
             myImages[itemSelected].setName(Integer.toString(stt));
             adapter.notifyItemChanged(itemSelected);
+            // save data album
+            SaveSystem.saveData(getActivity(), Integer.toString(Constraints.CARD_DATA_ID), album);
         }
     }
 
@@ -106,7 +110,7 @@ public class CardDataFragment extends Fragment {
     }
 
     private void init() {
-        ItemAlbum album = SaveSystem.getDataAlbum(getActivity(), Constraints.CARD_DATA_ID);
+        album = SaveSystem.getDataAlbum(getActivity(), dataId);
         myImages = album.toArray();
     }
 

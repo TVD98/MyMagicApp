@@ -127,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
         int id = SaveSystem.getDataId(this);
         id += result;
         if (id < 0)
-            id = 1;
-        if (id > 1)
+            id = Constraints.MAX_DATA_COUNT;
+        if (id >= Constraints.MAX_DATA_COUNT)
             id = 0;
         Toast.makeText(this, Integer.toString(id), Toast.LENGTH_LONG).show();
         SaveSystem.saveDataId(id, this);

@@ -59,9 +59,28 @@ public class SaveSystem {
         saveData(context, KEY_NAME_IMAGE_LIST, gallery.toImageArray().toArray());
     }
 
-    public static void saveImageDataAlbumToShared(Context context){
-        Album data = Constraints.getImageDataAlbum();
-        saveData(context, KEY_NAME_DATA, data);
+    public static void saveAllDataAlbum(Context context){
+        saveCardData(context);
+        saveFoodData(context);
+        saveOptionData(context);
+    }
+
+    public static void saveCardData(Context context){
+        String nameAlbum = Integer.toString(Constraints.CARD_DATA_ID);
+        ItemAlbum itemAlbum = Constraints.imageListToItemAlbum(Constraints.imageCardIdList, nameAlbum);
+        saveData(context, nameAlbum, itemAlbum);
+    }
+
+    public static void saveFoodData(Context context){
+        String nameAlbum = Integer.toString(Constraints.FOOD_DATA_ID);
+        ItemAlbum itemAlbum = Constraints.imageListToItemAlbum(Constraints.imageFoodIdList, nameAlbum);
+        saveData(context, nameAlbum, itemAlbum);
+    }
+
+    public static void saveOptionData(Context context){
+        String nameAlbum = Integer.toString(Constraints.OPTION_DATA_ID);
+        ItemAlbum itemAlbum = Constraints.imageListToItemAlbum(Constraints.imageOptionIdList, nameAlbum);
+        saveData(context, nameAlbum, itemAlbum);
     }
 
     public static void findAndSaveGalleryToShared(Activity activity){
@@ -88,8 +107,8 @@ public class SaveSystem {
     }
 
     public static ItemAlbum getDataAlbum(Context context, int dataId){
-        Album data = getData(context, KEY_NAME_DATA, Album.class);
-        return data.getItem(dataId);
+        ItemAlbum itemAlbum = getData(context, Integer.toString(dataId), ItemAlbum.class);
+        return itemAlbum;
     }
 
     public static void saveDataId(int id, Context context){

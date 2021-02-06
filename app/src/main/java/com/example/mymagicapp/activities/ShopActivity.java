@@ -113,7 +113,7 @@ public class ShopActivity extends AppCompatActivity {
     }
 
     private void unlockGadgets(){
-        SaveSystem.saveImageDataAlbumToShared(this); // create image data
+        SaveSystem.saveAllDataAlbum(this); // create image data
     }
 
     private void finishShop(){
