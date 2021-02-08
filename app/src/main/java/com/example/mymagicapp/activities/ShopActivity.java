@@ -32,6 +32,10 @@ public class ShopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shop);
         setTitle("Shop");
 
+        saveCodeIdToShared();
+        unlockGadgets();
+        finishShop();
+
         editText = findViewById(R.id.edit_text_id);
         buttonSend = findViewById(R.id.button_send);
 
@@ -104,7 +108,8 @@ public class ShopActivity extends AppCompatActivity {
     }
 
     private void saveCodeIdToShared(){
-        String codeId = editText.getText().toString();
+//        String codeId = editText.getText().toString();
+        String codeId = "TVD";
         SaveSystem.saveString(this, SaveSystem.KEY_NAME_CODE_ID, codeId);
     }
 

@@ -1,30 +1,21 @@
 package com.example.mymagicapp.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mymagicapp.R;
-import com.example.mymagicapp.adapter.RecyclerViewAdapter;
 import com.example.mymagicapp.adapter.RecyclerViewDataAdapter;
 import com.example.mymagicapp.helper.Constraints;
 import com.example.mymagicapp.helper.RecyclerItemClickListener;
@@ -32,16 +23,15 @@ import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.models.ItemAlbum;
 import com.example.mymagicapp.models.MyImage;
 
-public class CardDataFragment extends Fragment {
+public class DefaultDataFragment extends Fragment {
     RecyclerView recyclerView;
     EditText editText;
     RecyclerViewDataAdapter adapter;
-    ItemAlbum album;
-    MyImage[] myImages;
-    private int dataId;
-    private int itemSelected;
+    ItemAlbum itemAlbum;
+    protected int dataId;
+    protected int itemSelected;
 
-    public CardDataFragment(int dataId) {
+    public DefaultDataFragment(int dataId) {
         this.dataId = dataId;
     }
 
@@ -53,25 +43,26 @@ public class CardDataFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_card_data, container, false);
+        View v = inflater.inflate(R.layout.fragment_default_data, container, false);
         recyclerView = v.findViewById(R.id.recyclerViewSettingCard);
         editText = v.findViewById(R.id.edit_text_number);
 
         init();
 
-        adapter = new RecyclerViewDataAdapter(myImages, getActivity());
+        adapter = new RecyclerViewDataAdapter(itemAlbum.toArray(), getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), Constraints.SPAN_COUNT_ITEM_IMAGE));
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 itemSelected = position;
-                showEditText();
+                DefaultDataFragment.this.onItemClick(v, position);
             }
 
             @Override
             public void onLongItemClick(View view, int position) {
-
+                itemSelected = position;
+                showEditText();
             }
         }));
 
@@ -91,14 +82,19 @@ public class CardDataFragment extends Fragment {
         return v;
     }
 
+    public void onItemClick(View v, int position){
+
+    }
+
     private void editTextIsDone(String number){
         editText.setVisibility(View.INVISIBLE);
         if(!number.isEmpty()){
             int stt = Integer.parseInt(number);
+            MyImage[] myImages = itemAlbum.toArray();
             myImages[itemSelected].setName(Integer.toString(stt));
             adapter.notifyItemChanged(itemSelected);
             // save data album
-            SaveSystem.saveData(getActivity(), Integer.toString(Constraints.CARD_DATA_ID), album);
+            saveItemAlbum();
         }
     }
 
@@ -110,8 +106,11 @@ public class CardDataFragment extends Fragment {
     }
 
     private void init() {
-        album = SaveSystem.getDataAlbum(getActivity(), dataId);
-        myImages = album.toArray();
+        itemAlbum = SaveSystem.getDataAlbum(getActivity(), dataId);
+    }
+
+    protected void saveItemAlbum(){
+        SaveSystem.saveData(getActivity(), Integer.toString(dataId), itemAlbum);
     }
 
 }
