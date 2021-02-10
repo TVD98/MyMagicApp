@@ -35,7 +35,7 @@ public class Constraints {
 
     public static int[] imageFoodIdList = {R.drawable.anh_nen_1, R.drawable.anh_nen_2, R.drawable.anh_nen_3};
 
-    public static int[] imageOptionIdList = {R.drawable.like};
+    public static int[] imageOptionIdList = {R.drawable.share};
 
     public static ItemAlbum imageListToItemAlbum(int[] list, String nameAlbum){
         ItemAlbum itemAlbum = new ItemAlbum();
@@ -48,6 +48,18 @@ public class Constraints {
             image.setDescription(nameAlbum);
             itemAlbum.addItem(image, DEFAULT_INDEX_TO_ADD);
         }
+        return itemAlbum;
+    }
+
+    public static ItemAlbum imageOptionIdListToItemAlbum(){
+        ItemAlbum itemAlbum = new ItemAlbum();
+        String nameAlbum = Integer.toString(OPTION_DATA_ID);
+        itemAlbum.setName(nameAlbum);
+        MyImage image = new MyImage();
+        image.setImageId(imageOptionIdList[0]);
+        image.setName("0");
+        image.setDescription(nameAlbum);
+        itemAlbum.addItem(image, DEFAULT_INDEX_TO_ADD);
         return itemAlbum;
     }
 

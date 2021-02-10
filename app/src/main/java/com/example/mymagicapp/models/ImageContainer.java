@@ -73,4 +73,8 @@ public class ImageContainer extends MyItem implements IMyCollection {
         return null;
     }
 
+    public List<MyImage> getImageList(){
+        return this.imageList;
+    }
+
 }

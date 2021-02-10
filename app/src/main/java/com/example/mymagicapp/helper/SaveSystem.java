@@ -79,7 +79,7 @@ public class SaveSystem {
 
     public static void saveOptionData(Context context){
         String nameAlbum = Integer.toString(Constraints.OPTION_DATA_ID);
-        ItemAlbum itemAlbum = Constraints.imageListToItemAlbum(Constraints.imageOptionIdList, nameAlbum);
+        ItemAlbum itemAlbum = Constraints.imageOptionIdListToItemAlbum();
         saveData(context, nameAlbum, itemAlbum);
     }
 

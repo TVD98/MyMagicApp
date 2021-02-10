@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.mymagicapp.activities.SettingActivity;
 import com.example.mymagicapp.helper.Constraints;
 import com.example.mymagicapp.models.MyImage;
 
@@ -24,16 +25,43 @@ public class OptionDataFragment extends DefaultDataFragment {
 
     @Override
     public void onItemClick(View v, int position) {
+        SettingActivity activity = (SettingActivity) getActivity();
+        if (activity.isModeRemove()) {
+            removeImage();
+        } else {
+            addImage();
+        }
+    }
+
+    private void removeImage() {
+        if (itemSelected != firstItem) {
+            myImages.remove(itemSelected);
+            adapter.notifyItemRemoved(itemSelected);
+        }
+    }
+
+    private void addImage() {
         if (itemSelected == firstItem) {
             pickImagesFromGallery();
         } else pickImageFromGallery();
     }
 
     @Override
+    public boolean couldChangeData() {
+        if (itemSelected == firstItem)
+            return false;
+        return true;
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-
+            Uri uri = data.getData();
+            MyImage image = myImages.get(itemSelected);
+            image.setUri(uri.toString());
+            adapter.notifyItemChanged(itemSelected);
+            saveItemAlbum();
         } else if (requestCode == RESULT_LOAD_IMAGES && resultCode == RESULT_OK && null != data) {
             Uri[] uris = new Uri[1];
             if (data.getClipData() != null) {
@@ -43,8 +71,7 @@ public class OptionDataFragment extends DefaultDataFragment {
                 for (int i = 0; i < itemCount; i++) {
                     uris[i] = clipData.getItemAt(i).getUri();
                 }
-            }
-            else if (data.getData() != null) {
+            } else if (data.getData() != null) {
                 Uri uri = data.getData();
                 uris[0] = uri;
             }
@@ -71,13 +98,12 @@ public class OptionDataFragment extends DefaultDataFragment {
         ) {
             MyImage image = new MyImage();
             image.setUri(uri.toString());
-            image.setName(Integer.toString(index + 1));
+            image.setName(Integer.toString(index));
             image.setDescription(Integer.toString(dataId));
             itemAlbum.addItem(image, Constraints.DEFAULT_INDEX_TO_ADD);
-            index++;
             adapter.notifyItemInserted(index);
+            index++;
         }
         saveItemAlbum();
-//        SaveSystem.saveData(getActivity(), Integer.toString(Constraints.CARD_DATA_ID), itemAlbum);
     }
 }

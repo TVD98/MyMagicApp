@@ -30,6 +30,7 @@ public class SettingActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private SettingPagerAdapter settingPagerAdapter;
+    private boolean modeRemove = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +106,20 @@ public class SettingActivity extends AppCompatActivity {
             case R.id.itemSync:
                 syncGallery();
                 break;
+            case R.id.itemRemove:
+                changeModeRemove();
+                break;
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean isModeRemove() {
+        return modeRemove;
+    }
+
+    public void changeModeRemove() {
+        modeRemove = !modeRemove;
+        Toast.makeText(this, "Mode remove: " + Boolean.toString(modeRemove), Toast.LENGTH_SHORT).show();
     }
 }

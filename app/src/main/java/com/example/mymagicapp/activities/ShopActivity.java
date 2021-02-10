@@ -32,10 +32,6 @@ public class ShopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shop);
         setTitle("Shop");
 
-        saveCodeIdToShared();
-        unlockGadgets();
-        finishShop();
-
         editText = findViewById(R.id.edit_text_id);
         buttonSend = findViewById(R.id.button_send);
 

@@ -14,11 +14,13 @@ import com.bumptech.glide.Glide;
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.models.MyImage;
 
+import java.util.List;
+
 public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDataAdapter.RecyclerViewDataHolder> {
-    private MyImage[] myImages;
+    private List<MyImage> myImages;
     private Context context;
 
-    public RecyclerViewDataAdapter(MyImage[] myImages, Context context) {
+    public RecyclerViewDataAdapter(List<MyImage> myImages, Context context) {
         this.context = context;
         this.myImages = myImages;
     }
@@ -33,7 +35,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewDataHolder holder, int position) {
-        MyImage image = myImages[position];
+        MyImage image = myImages.get(position);
         if (image.imageIdIsNull()) {
             Glide.with(context).load(image.getUri())
                     .centerCrop()
@@ -48,7 +50,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     @Override
     public int getItemCount() {
-        return myImages.length;
+        return myImages.size();
     }
 
 

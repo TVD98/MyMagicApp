@@ -23,10 +23,13 @@ import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.models.ItemAlbum;
 import com.example.mymagicapp.models.MyImage;
 
+import java.util.List;
+
 public class DefaultDataFragment extends Fragment {
     RecyclerView recyclerView;
     EditText editText;
     RecyclerViewDataAdapter adapter;
+    List<MyImage> myImages;
     ItemAlbum itemAlbum;
     protected int dataId;
     protected int itemSelected;
@@ -49,7 +52,7 @@ public class DefaultDataFragment extends Fragment {
 
         init();
 
-        adapter = new RecyclerViewDataAdapter(itemAlbum.toArray(), getActivity());
+        adapter = new RecyclerViewDataAdapter(myImages, getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), Constraints.SPAN_COUNT_ITEM_IMAGE));
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
@@ -62,14 +65,16 @@ public class DefaultDataFragment extends Fragment {
             @Override
             public void onLongItemClick(View view, int position) {
                 itemSelected = position;
-                showEditText();
+                if (couldChangeData()) {
+                    showEditText();
+                }
             }
         }));
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                switch (actionId){
+                switch (actionId) {
                     case EditorInfo.IME_ACTION_DONE:
                     case EditorInfo.IME_ACTION_NEXT:
                     case EditorInfo.IME_ACTION_PREVIOUS:
@@ -82,34 +87,38 @@ public class DefaultDataFragment extends Fragment {
         return v;
     }
 
-    public void onItemClick(View v, int position){
+    public void onItemClick(View v, int position) {
 
     }
 
-    private void editTextIsDone(String number){
+    public boolean couldChangeData() {
+        return true;
+    }
+
+    private void editTextIsDone(String number) {
         editText.setVisibility(View.INVISIBLE);
-        if(!number.isEmpty()){
+        if (!number.isEmpty()) {
             int stt = Integer.parseInt(number);
-            MyImage[] myImages = itemAlbum.toArray();
-            myImages[itemSelected].setName(Integer.toString(stt));
+            myImages.get(itemSelected).setName(Integer.toString(stt));
             adapter.notifyItemChanged(itemSelected);
             // save data album
             saveItemAlbum();
         }
     }
 
-    private void showEditText(){
+    private void showEditText() {
         editText.setVisibility(View.VISIBLE);
-        if(editText.requestFocus()) {
+        if (editText.requestFocus()) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
 
     private void init() {
         itemAlbum = SaveSystem.getDataAlbum(getActivity(), dataId);
+        myImages = itemAlbum.getImageList();
     }
 
-    protected void saveItemAlbum(){
+    protected void saveItemAlbum() {
         SaveSystem.saveData(getActivity(), Integer.toString(dataId), itemAlbum);
     }
 
