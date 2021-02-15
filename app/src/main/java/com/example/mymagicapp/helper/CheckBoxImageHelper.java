@@ -3,32 +3,21 @@ package com.example.mymagicapp.helper;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CheckBoxImageHelper {
-    private int collectionId;
     private List<Integer> imageIdList = new ArrayList<>();
 
-    public CheckBoxImageHelper(int collectionId) {
-        this.collectionId = collectionId;
+    public CheckBoxImageHelper() {
+
     }
 
-    public int getCollectionId() {
-        return this.collectionId;
-    }
-
-    public List<Integer> getImageIdList(){
-        return this.imageIdList;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        String result = Integer.toString(collectionId) + "(";
-        for (Integer id : imageIdList) {
-            result += id + ",";
-        }
-        return result + ")";
+    public Integer[] toArray(){
+        Collections.sort(imageIdList);
+        Integer[] array = new Integer[imageIdList.size()];
+        imageIdList.toArray(array);
+        return array;
     }
 
     public void changeCheckBox(int id) {
@@ -38,5 +27,20 @@ public class CheckBoxImageHelper {
         } else {
             imageIdList.remove(index);
         }
+    }
+
+    public boolean contain(int id){
+        int index = imageIdList.indexOf(id);
+        if(index == -1)
+            return false;
+        return true;
+    }
+
+    public int size(){
+        return imageIdList.size();
+    }
+
+    public void clear(){
+        imageIdList.clear();
     }
 }

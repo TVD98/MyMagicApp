@@ -18,8 +18,7 @@ public class SaveSystem {
     public static final String KEY_NAME_ALBUM = "album";
     public static final String KEY_NAME_IMAGE_LIST = "image_list";
     public static final String KEY_NAME_SPECIAL_IMAGE = "special_image";
-    public static final String KEY_NAME_CODE_ID = "code_id";
-    public static final String KEY_NAME_DATA = "data";
+    public static final String MAC_ADDRESS = "mac_address";
     public static final String DATA_ID = "data_id";
 
     public static void saveData(Context context, String keyDataName, Object data) {
@@ -28,7 +27,7 @@ public class SaveSystem {
         saveString(context, keyDataName, json);
     }
 
-    public static void saveString(Context context, String keyDataName, String data){
+    public static void saveString(Context context, String keyDataName, String data) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARE_PREFERENCES_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(keyDataName, data);
@@ -40,57 +39,57 @@ public class SaveSystem {
         if (data == null)
             return null;
         else {
-            try{
-            Gson gson = new Gson();
-            return gson.fromJson(data, type);
-            } catch (Exception e){
+            try {
+                Gson gson = new Gson();
+                return gson.fromJson(data, type);
+            } catch (Exception e) {
                 return null;
             }
         }
     }
 
-    public static String getString(Context context, String keyDataName){
+    public static String getString(Context context, String keyDataName) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARE_PREFERENCES_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(keyDataName, null);
     }
 
-    public static void saveGalleryToShared(Gallery gallery, Context context){
+    public static void saveGalleryToShared(Gallery gallery, Context context) {
         saveData(context, KEY_NAME_COLLECTION, gallery);
         saveData(context, KEY_NAME_IMAGE_LIST, gallery.toImageArray().toArray());
     }
 
-    public static void saveAllDataAlbum(Context context){
+    public static void saveAllDataAlbum(Context context) {
         saveCardData(context);
         saveFoodData(context);
         saveOptionData(context);
     }
 
-    public static void saveCardData(Context context){
-        String nameAlbum = Integer.toString(Constraints.CARD_DATA_ID);
+    public static void saveCardData(Context context) {
+        String nameAlbum = Constraints.dataNameList[Constraints.CARD_DATA_ID];
         ItemAlbum itemAlbum = Constraints.imageListToItemAlbum(Constraints.imageCardIdList, nameAlbum);
         saveData(context, nameAlbum, itemAlbum);
     }
 
-    public static void saveFoodData(Context context){
-        String nameAlbum = Integer.toString(Constraints.FOOD_DATA_ID);
+    public static void saveFoodData(Context context) {
+        String nameAlbum = Constraints.dataNameList[Constraints.FOOD_DATA_ID];
         ItemAlbum itemAlbum = Constraints.imageListToItemAlbum(Constraints.imageFoodIdList, nameAlbum);
         saveData(context, nameAlbum, itemAlbum);
     }
 
-    public static void saveOptionData(Context context){
-        String nameAlbum = Integer.toString(Constraints.OPTION_DATA_ID);
+    public static void saveOptionData(Context context) {
+        String nameAlbum = Constraints.dataNameList[Constraints.OPTION_DATA_ID];
         ItemAlbum itemAlbum = Constraints.imageOptionIdListToItemAlbum();
         saveData(context, nameAlbum, itemAlbum);
     }
 
-    public static void findAndSaveGalleryToShared(Activity activity){
+    public static void findAndSaveGalleryToShared(Activity activity) {
         ImageSample[] imageSamples = GalleryHelper.fetchGalleryImages(activity); // get all images from gallery
 
         Gallery gallery = new Gallery(); // create a gallery
         Album album = new Album(); // create a album
 
         int imageCount = imageSamples.length;
-        for(int i=0;i<imageCount;i++){
+        for (int i = 0; i < imageCount; i++) {
             ImageSample imageSample = imageSamples[i];
             // create image then set info for it
             MyImage myImage = new MyImage();
@@ -106,20 +105,30 @@ public class SaveSystem {
         saveData(activity, KEY_NAME_ALBUM, album); // save album to shared
     }
 
-    public static ItemAlbum getDataAlbum(Context context, int dataId){
-        ItemAlbum itemAlbum = getData(context, Integer.toString(dataId), ItemAlbum.class);
+    public static ItemAlbum getDataAlbum(Context context, int dataId) {
+        ItemAlbum itemAlbum = getData(context, Constraints.dataNameList[dataId], ItemAlbum.class);
         return itemAlbum;
     }
 
-    public static void saveDataId(int id, Context context){
+    public static void saveDataId(int id, Context context) {
         saveString(context, DATA_ID, Integer.toString(id));
     }
 
-    public static int getDataId(Context context){
+    public static int getDataId(Context context) {
         String id = getString(context, DATA_ID);
-        if(id != null)
+        if (id != null)
             return Integer.parseInt(id);
         else return Constraints.CARD_DATA_ID;
+    }
+
+    public static void unlockApp(Context context) {
+        // save mac address
+        String macAddress = Utility.getMacAddress();
+        SaveSystem.saveString(context, SaveSystem.MAC_ADDRESS, macAddress);
+
+        // unlock Gadgets
+        SaveSystem.saveAllDataAlbum(context); // create image data
+
     }
 
 }

@@ -20,12 +20,17 @@ import com.example.mymagicapp.helper.OnShowImageLongClickedListener;
 import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.Gallery;
+import com.example.mymagicapp.models.ItemGallery;
 import com.example.mymagicapp.models.MyImage;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CollectionMainFragment extends Fragment {
     public RecyclerView recyclerViewMain;
     public Gallery gallery;
+    public List<ItemGallery> itemGalleryList = new ArrayList<>();
     private RecyclerViewAdapter adapter;
 
     public CollectionMainFragment() {
@@ -45,7 +50,7 @@ public class CollectionMainFragment extends Fragment {
             @Override
             public void onShowImageLongClicked(Object[] datas) {
                 MainActivity activity = (MainActivity) getActivity();
-                if(activity.isModeRemove()) {
+                if (activity.isModeRemove()) {
                     MyImage myImage = (MyImage) datas[0];
                     removeImage(myImage);
                     SaveSystem.saveGalleryToShared(gallery, getActivity()); // save gallery to shared
@@ -63,7 +68,7 @@ public class CollectionMainFragment extends Fragment {
 
         init();
 
-        adapter = new RecyclerViewAdapter(gallery.toArray(), getActivity());
+        adapter = new RecyclerViewAdapter(itemGalleryList, getActivity());
         recyclerViewMain.setAdapter(adapter);
         recyclerViewMain.setLayoutManager(new LinearLayoutManager(getActivity()));
         return v;
@@ -71,11 +76,12 @@ public class CollectionMainFragment extends Fragment {
 
     private void init() {
         gallery = SaveSystem.getData(getActivity(), SaveSystem.KEY_NAME_COLLECTION, Gallery.class);
-        if(gallery == null)
+        if (gallery == null)
             gallery = new Gallery();
+        itemGalleryList = gallery.getItemGalleryList();
     }
 
-    private void removeImage(MyImage image){
+    private void removeImage(MyImage image) {
         gallery.removeItem(image); // remove image
         adapter.notifyDataSetChanged();
     }

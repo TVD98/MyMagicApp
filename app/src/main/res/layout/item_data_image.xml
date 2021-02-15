@@ -12,6 +12,17 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
+    <EditText
+        android:id="@+id/edit_stt"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="right"
+        android:textSize="14dp"
+        android:gravity="center"
+        android:inputType="number"
+        android:textColor="@color/black"
+        android:background="@color/white"/>
+
     <TextView
         android:id="@+id/text_stt"
         android:layout_width="20dp"
@@ -23,12 +34,11 @@
         android:textColor="@color/black"
         android:background="@color/white"/>
 
-    <CheckBox
-        android:id="@+id/checkboxImage"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+    <ImageView
+        android:id="@+id/check"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@drawable/check"/>
 
 </androidx.cardview.widget.CardView>

@@ -24,11 +24,18 @@ import com.example.mymagicapp.adapter.MainPagerAdapter;
 import com.example.mymagicapp.helper.Broadcast;
 import com.example.mymagicapp.helper.Constraints;
 import com.example.mymagicapp.helper.EventManager;
+import com.example.mymagicapp.helper.FirebaseSingleton;
 import com.example.mymagicapp.helper.OnShowImageClickedListener;
 import com.example.mymagicapp.helper.SaveSystem;
+import com.example.mymagicapp.helper.Utility;
+import com.example.mymagicapp.models.Code;
 import com.example.mymagicapp.models.MyImage;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
@@ -103,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.itemSetting:
                 if (hasBeenUnlocked())
                     startSettingActivity();
-                else startShopActivity();
+                else checkUserName();
                 break;
             default:
                 changeModeRemove();
@@ -154,10 +161,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean hasBeenUnlocked() {
-        String codeId = SaveSystem.getString(this, SaveSystem.KEY_NAME_CODE_ID);
-        if (codeId != null)
+        String macAddress = SaveSystem.getString(this, SaveSystem.MAC_ADDRESS);
+        if (macAddress != null)
             return true;
         return false;
+    }
+
+    private void checkUserName() {
+        FirebaseSingleton.getInstance().database.child("codes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Iterable<DataSnapshot> children = snapshot.getChildren();
+                String macAddress = Utility.getMacAddress();
+                boolean unlock = false;
+                for (DataSnapshot child : children
+                ) {
+                    Code code = child.getValue(Code.class);
+                    if (code.getUserName().compareTo(macAddress) == 0) {
+                        unlock = true;
+                        SaveSystem.unlockApp(MainActivity.this);
+                        startSettingActivity();
+                        break;
+                    }
+                }
+                if (!unlock)
+                    startShopActivity();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void startShopActivity() {

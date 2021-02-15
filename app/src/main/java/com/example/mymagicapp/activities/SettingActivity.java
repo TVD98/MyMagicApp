@@ -4,33 +4,39 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.mymagicapp.R;
-import com.example.mymagicapp.adapter.MainPagerAdapter;
-import com.example.mymagicapp.adapter.SettingPagerAdapter;
+import com.example.mymagicapp.adapter.RecyclerViewAlbumAdapter;
+import com.example.mymagicapp.adapter.RecyclerViewDataAdapter;
+import com.example.mymagicapp.helper.Constraints;
+import com.example.mymagicapp.helper.RecyclerItemClickListener;
 import com.example.mymagicapp.helper.SaveSystem;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
+import com.example.mymagicapp.models.ItemAlbum;
+import com.example.mymagicapp.models.MyImage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SettingActivity extends AppCompatActivity {
     private static final int MY_READ_PERMISSION_CODE = 101;
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager2;
-    private SettingPagerAdapter settingPagerAdapter;
-    private boolean modeRemove = false;
+    private RecyclerView recyclerView;
+    private RecyclerViewAlbumAdapter adapter;
+    private List<ItemAlbum> itemAlbums = new ArrayList<>();
+    private int itemSelected = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,34 +44,45 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         setTitle("Setting");
 
-        tabLayout = findViewById(R.id.tabLayoutSetting);
-        viewPager2 = findViewById(R.id.viewPagerSetting);
+        recyclerView = findViewById(R.id.recyclerViewSetting);
 
-        attachFragments();
+        init();
+
+        adapter = new RecyclerViewAlbumAdapter(itemAlbums, this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                itemSelected = position;
+                showItemAlbum(position);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
     }
 
-    private void attachFragments() {
-        settingPagerAdapter = new SettingPagerAdapter(this);
-        viewPager2.setAdapter(settingPagerAdapter);
-        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(
-                tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                switch (position) {
-                    case 0:
-                        tab.setText("Card");
-                        break;
-                    case 1:
-                        tab.setText("Food");
-                        break;
-                    case  2:
-                        tab.setText("Option");
-                        break;
-                }
-            }
-        }
-        );
-        tabLayoutMediator.attach();
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        init();
+        adapter.notifyItemChanged(itemSelected);
+    }
+
+    private void showItemAlbum(int position) {
+        Intent intent = new Intent(this, ShowItemAlbumActivity.class);
+        intent.putExtra("DATA_ID", position);
+        startActivity(intent);
+    }
+
+    private void init() {
+        itemAlbums.clear();
+        itemAlbums.add(SaveSystem.getDataAlbum(this, Constraints.CARD_DATA_ID));
+        itemAlbums.add(SaveSystem.getDataAlbum(this, Constraints.FOOD_DATA_ID));
+        itemAlbums.add(SaveSystem.getDataAlbum(this, Constraints.OPTION_DATA_ID));
     }
 
     private void syncGallery() {
@@ -102,24 +119,11 @@ public class SettingActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.itemSync:
                 syncGallery();
                 break;
-            case R.id.itemRemove:
-                changeModeRemove();
-                break;
-
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public boolean isModeRemove() {
-        return modeRemove;
-    }
-
-    public void changeModeRemove() {
-        modeRemove = !modeRemove;
-        Toast.makeText(this, "Mode remove: " + Boolean.toString(modeRemove), Toast.LENGTH_SHORT).show();
     }
 }

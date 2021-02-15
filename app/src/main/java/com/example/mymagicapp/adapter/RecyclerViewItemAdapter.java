@@ -16,11 +16,13 @@ import com.example.mymagicapp.helper.EventManager;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.MyImage;
 
+import java.util.List;
+
 public class RecyclerViewItemAdapter extends RecyclerView.Adapter<RecyclerViewItemAdapter.RecyclerViewItemMainHolder> {
-    public MyImage[] imageList;
+    public List<MyImage> imageList;
     public Context context;
 
-    public RecyclerViewItemAdapter(MyImage[] imageList, Context context) {
+    public RecyclerViewItemAdapter(List<MyImage> imageList, Context context) {
         this.imageList = imageList;
         this.context = context;
     }
@@ -35,7 +37,7 @@ public class RecyclerViewItemAdapter extends RecyclerView.Adapter<RecyclerViewIt
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewItemMainHolder holder, int position) {
-        MyImage image = imageList[position];
+        MyImage image = imageList.get(position);
         if (image.imageIdIsNull()) {
             Glide.with(context).load(image.getUri())
                     .centerCrop()
@@ -66,7 +68,7 @@ public class RecyclerViewItemAdapter extends RecyclerView.Adapter<RecyclerViewIt
 
     @Override
     public int getItemCount() {
-        return imageList.length;
+        return imageList.size();
     }
 
     public class RecyclerViewItemMainHolder extends RecyclerView.ViewHolder{

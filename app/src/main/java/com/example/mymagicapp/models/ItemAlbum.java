@@ -11,10 +11,10 @@ import java.util.List;
 public class ItemAlbum extends ImageContainer{
     public ItemAlbum(){ }
 
-    public String uriOfFirstImage(){
-        if(size() == 0) // list is null
+    public MyImage getFirstImage(){
+        if(size() == 0)
             return null;
-        else return imageList.get(0).getUri(); // get uri of first image
+        return imageList.get(0);
     }
 
 }

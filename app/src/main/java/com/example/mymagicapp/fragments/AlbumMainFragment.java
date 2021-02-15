@@ -33,7 +33,7 @@ public class AlbumMainFragment extends Fragment {
 
         init();
 
-        recyclerView.setAdapter(new RecyclerViewAlbumAdapter(album.toArray(), getActivity()));
+        recyclerView.setAdapter(new RecyclerViewAlbumAdapter(album.getItemAlbums(), getActivity()));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 

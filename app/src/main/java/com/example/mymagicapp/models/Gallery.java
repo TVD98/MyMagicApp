@@ -12,6 +12,10 @@ import java.util.List;
 public class Gallery implements IMyCollection {
     private List<ItemGallery> itemGalleryList = new ArrayList<>();
 
+    public List<ItemGallery> getItemGalleryList() {
+        return itemGalleryList;
+    }
+
     public Gallery() { }
 
     @Override

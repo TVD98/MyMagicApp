@@ -34,12 +34,6 @@ public class MyImage extends MyItem {
         return Utility.localTimeToString(time);
     }
 
-    public boolean isImageData(){
-        if(getName().isEmpty())
-            return false;
-        return true;
-    }
-
     public String getUri() {
         return uri;
     }

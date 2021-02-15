@@ -14,14 +14,16 @@ import com.example.mymagicapp.R;
 import com.example.mymagicapp.helper.Constraints;
 import com.example.mymagicapp.models.ItemGallery;
 
+import java.util.List;
+
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewMainHolder> {
-    private ItemGallery[] itemGalleries;
+    private List<ItemGallery> itemGalleries;
     private RecyclerViewItemAdapter[] recyclerViewItemAdapters;
     private Context context;
 
-    public RecyclerViewAdapter(ItemGallery[] itemGalleries, Context context) {
+    public RecyclerViewAdapter(List<ItemGallery> itemGalleries, Context context) {
         this.itemGalleries = itemGalleries;
-        this.recyclerViewItemAdapters = new RecyclerViewItemAdapter[itemGalleries.length];
+        this.recyclerViewItemAdapters = new RecyclerViewItemAdapter[itemGalleries.size()];
         this.context = context;
 
     }
@@ -36,16 +38,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewMainHolder holder, int position) {
-        ItemGallery itemGallery = itemGalleries[position];
+        ItemGallery itemGallery = itemGalleries.get(position);
         holder.textTitle.setText(itemGallery.title());
-        recyclerViewItemAdapters[position] = new RecyclerViewItemAdapter(itemGallery.toArray(), context); // create recycleViewItemAdapter
+        recyclerViewItemAdapters[position] = new RecyclerViewItemAdapter(itemGallery.getImageList(), context); // create recycleViewItemAdapter
         holder.recyclerView.setAdapter(recyclerViewItemAdapters[position]);
         holder.recyclerView.setLayoutManager(new GridLayoutManager(context, Constraints.SPAN_COUNT_ITEM_IMAGE));
     }
 
     @Override
     public int getItemCount() {
-        return itemGalleries.length;
+        return itemGalleries.size();
     }
 
     public class RecyclerViewMainHolder extends RecyclerView.ViewHolder{

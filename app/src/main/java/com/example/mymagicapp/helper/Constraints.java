@@ -22,6 +22,8 @@ public class Constraints {
     public static final int FOOD_DATA_ID = 1;
     public static final int OPTION_DATA_ID = 2;
     public static final int MAX_DATA_COUNT = 3;
+    public final static int ALL_CODE = 0;
+    public final static int READY_CODE = 1;
 
     public static int[] imageCardIdList = {R.drawable.card_heart_a, R.drawable.card_heart_2, R.drawable.card_heart_3, R.drawable.card_heart_4, R.drawable.card_heart_5,
             R.drawable.card_heart_6, R.drawable.card_heart_7, R.drawable.card_heart_8, R.drawable.card_heart_9, R.drawable.card_heart_10, R.drawable.card_diamond_a,
@@ -37,7 +39,9 @@ public class Constraints {
 
     public static int[] imageOptionIdList = {R.drawable.share};
 
-    public static ItemAlbum imageListToItemAlbum(int[] list, String nameAlbum){
+    public static String[] dataNameList = {"Card", "Food", "Option"};
+
+    public static ItemAlbum imageListToItemAlbum(int[] list, String nameAlbum) {
         ItemAlbum itemAlbum = new ItemAlbum();
         itemAlbum.setName(nameAlbum);
         int cardIdListLength = list.length;
@@ -51,9 +55,9 @@ public class Constraints {
         return itemAlbum;
     }
 
-    public static ItemAlbum imageOptionIdListToItemAlbum(){
+    public static ItemAlbum imageOptionIdListToItemAlbum() {
         ItemAlbum itemAlbum = new ItemAlbum();
-        String nameAlbum = Integer.toString(OPTION_DATA_ID);
+        String nameAlbum = dataNameList[OPTION_DATA_ID];
         itemAlbum.setName(nameAlbum);
         MyImage image = new MyImage();
         image.setImageId(imageOptionIdList[0]);
@@ -61,6 +65,12 @@ public class Constraints {
         image.setDescription(nameAlbum);
         itemAlbum.addItem(image, DEFAULT_INDEX_TO_ADD);
         return itemAlbum;
+    }
+
+    public static boolean couldChangeName(MyImage image) {
+        if (image.getImageId() == R.drawable.share)
+            return false;
+        return true;
     }
 
 }

@@ -9,6 +9,10 @@ import java.util.List;
 public class Album implements IMyCollection{
     private List<ItemAlbum> itemAlbums = new ArrayList<>();
 
+    public List<ItemAlbum> getItemAlbums() {
+        return itemAlbums;
+    }
+
     @Override
     public void addItem(MyItem item, int index) {
         if (index == Constraints.INDEX_TO_ADD_IMAGE) {
