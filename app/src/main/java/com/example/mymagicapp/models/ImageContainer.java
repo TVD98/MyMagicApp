@@ -21,10 +21,14 @@ public class ImageContainer extends MyItem implements IMyCollection {
     @Override
     public void addItem(MyItem item, int index) {
         if (index == Constraints.DEFAULT_INDEX_TO_ADD)
-            imageList.add((MyImage) item);
+            addImage((MyImage) item);
         else
             imageList.add(index, (MyImage) item);
         this.sort(); // sort after add image.
+    }
+
+    public void addImage(MyImage image){
+        imageList.add(image);
     }
 
     @Override
@@ -44,7 +48,7 @@ public class ImageContainer extends MyItem implements IMyCollection {
     }
 
     @Override
-    public MyItem getItem(int index) {
+    public MyImage getItem(int index) {
         return imageList.get(index);
     }
 

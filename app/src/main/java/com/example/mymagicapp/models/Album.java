@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Album implements IMyCollection{
+public class Album extends  MyItem implements IMyCollection{
     private List<ItemAlbum> itemAlbums = new ArrayList<>();
 
     public List<ItemAlbum> getItemAlbums() {

@@ -4,6 +4,7 @@ package com.example.mymagicapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 
@@ -23,9 +24,7 @@ import com.example.mymagicapp.R;
 import com.example.mymagicapp.adapter.MainPagerAdapter;
 import com.example.mymagicapp.helper.Broadcast;
 import com.example.mymagicapp.helper.Constraints;
-import com.example.mymagicapp.helper.EventManager;
 import com.example.mymagicapp.helper.FirebaseSingleton;
-import com.example.mymagicapp.helper.OnShowImageClickedListener;
 import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.Code;
@@ -34,7 +33,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
@@ -42,9 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
-    private MainPagerAdapter mainPagerAdapter;
     private Broadcast broadcast;
-    private boolean modeRemove = false;
+    private MainPagerAdapter mainPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,16 +61,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager2 = findViewById(R.id.viewPagerMain);
 
         attachFragments();
-
-        // Get the event which the user click the image
-        EventManager.getInstance().setOnShowImageClickedListener(new OnShowImageClickedListener() {
-            @Override
-            public void onShowImageClicked(Object[] datas) {
-                View imageView = (View) datas[0];
-                MyImage image = (MyImage) datas[1];
-                startShowImageActivity(imageView, image);
-            }
-        });
     }
 
     private void attachFragments() {
@@ -92,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
             }
-        }
-        );
+        });
         tabLayoutMediator.attach();
     }
 
@@ -111,9 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 if (hasBeenUnlocked())
                     startSettingActivity();
                 else checkUserName();
-                break;
-            default:
-                changeModeRemove();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -139,25 +122,6 @@ public class MainActivity extends AppCompatActivity {
             id = 0;
         Toast.makeText(this, Integer.toString(id), Toast.LENGTH_LONG).show();
         SaveSystem.saveDataId(id, this);
-    }
-
-    private void startShowImageActivity(View imageView, MyImage image) {
-        Intent intent = new Intent(this, ShowImageActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("IMAGE", gson.toJson(image)); // put information of clicked image to intent
-        Pair[] pairs = new Pair[1];
-        pairs[0] = new Pair<View, String>(imageView, Constraints.TRANSITION_NAME);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, pairs);
-        startActivity(intent, options.toBundle());
-    }
-
-    public boolean isModeRemove() {
-        return modeRemove;
-    }
-
-    public void changeModeRemove() {
-        modeRemove = !modeRemove;
-        Toast.makeText(this, "Mode remove: " + Boolean.toString(modeRemove), Toast.LENGTH_SHORT).show();
     }
 
     private boolean hasBeenUnlocked() {
@@ -203,6 +167,9 @@ public class MainActivity extends AppCompatActivity {
     private void startSettingActivity() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
+    }
+    public Fragment getCurrentFragment(){
+        return mainPagerAdapter.getCurrentFragment(viewPager2.getCurrentItem());
     }
 
 }

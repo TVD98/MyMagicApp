@@ -3,11 +3,11 @@ package com.example.mymagicapp.adapter;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.mymagicapp.fragments.AlbumMainFragment;
-import com.example.mymagicapp.fragments.CollectionMainFragment;
+import com.example.mymagicapp.fragments.AlbumFragment;
+import com.example.mymagicapp.fragments.CollectionFragment;
+import com.example.mymagicapp.helper.SaveSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ public class MainPagerAdapter extends FragmentStateAdapter {
 
     public MainPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
-        fragments.add(new CollectionMainFragment());
-        fragments.add(new AlbumMainFragment());
+        fragments.add(new CollectionFragment());
+        fragments.add(new AlbumFragment(SaveSystem.KEY_NAME_ALBUM));
     }
 
     @NonNull
@@ -31,6 +31,10 @@ public class MainPagerAdapter extends FragmentStateAdapter {
     @Override
     public int getItemCount() {
         return fragments.size();
+    }
+
+    public Fragment getCurrentFragment(int pos){
+        return fragments.get(pos);
     }
 
 }

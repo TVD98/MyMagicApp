@@ -37,8 +37,6 @@ public class Constraints {
 
     public static int[] imageFoodIdList = {R.drawable.anh_nen_1, R.drawable.anh_nen_2, R.drawable.anh_nen_3};
 
-    public static int[] imageOptionIdList = {R.drawable.share};
-
     public static String[] dataNameList = {"Card", "Food", "Option"};
 
     public static ItemAlbum imageListToItemAlbum(int[] list, String nameAlbum) {
@@ -55,22 +53,41 @@ public class Constraints {
         return itemAlbum;
     }
 
-    public static ItemAlbum imageOptionIdListToItemAlbum() {
-        ItemAlbum itemAlbum = new ItemAlbum();
-        String nameAlbum = dataNameList[OPTION_DATA_ID];
-        itemAlbum.setName(nameAlbum);
-        MyImage image = new MyImage();
-        image.setImageId(imageOptionIdList[0]);
-        image.setName("0");
-        image.setDescription(nameAlbum);
-        itemAlbum.addItem(image, DEFAULT_INDEX_TO_ADD);
-        return itemAlbum;
+    public static Album getDataAlbum() {
+        Album album = new Album();
+        ItemAlbum cardItemAlbum = imageListToItemAlbum(imageCardIdList, "Card");
+        ItemAlbum foodItemAlbum = imageListToItemAlbum(imageFoodIdList, "Food");
+        ItemAlbum optionItemAlbum = new ItemAlbum();
+        optionItemAlbum.setName("Option");
+        album.addItem(cardItemAlbum, DEFAULT_INDEX_TO_ADD);
+        album.addItem(foodItemAlbum, DEFAULT_INDEX_TO_ADD);
+        album.addItem(optionItemAlbum, DEFAULT_INDEX_TO_ADD);
+        return album;
     }
 
     public static boolean couldChangeName(MyImage image) {
-        if (image.getImageId() == R.drawable.share)
+        if (image.getName().isEmpty())
             return false;
         return true;
+    }
+
+    public static boolean couldChangeImage(MyImage image) {
+        if (image.getDescription().compareTo("Option") == 0)
+            return true;
+        return false;
+    }
+
+    public static boolean couldAddImages(String nameAlbum, String nameItemAlbum) {
+        if (nameAlbum.compareTo(SaveSystem.KEY_NAME_DATA_ALBUM) == 0
+                && nameItemAlbum.compareTo("Option") == 0)
+            return true;
+        return false;
+    }
+
+    public static boolean couldRemoveImage(MyImage image) {
+        if (image.getDescription().compareTo("Option") == 0)
+            return true;
+        return false;
     }
 
 }

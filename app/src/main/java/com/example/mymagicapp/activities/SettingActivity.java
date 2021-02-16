@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.content.Intent;
@@ -14,18 +14,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.mymagicapp.R;
-import com.example.mymagicapp.adapter.RecyclerViewAlbumAdapter;
-import com.example.mymagicapp.adapter.RecyclerViewDataAdapter;
-import com.example.mymagicapp.helper.Constraints;
-import com.example.mymagicapp.helper.RecyclerItemClickListener;
+import com.example.mymagicapp.fragments.AlbumFragment;
 import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.models.ItemAlbum;
-import com.example.mymagicapp.models.MyImage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +27,9 @@ import java.util.List;
 
 public class SettingActivity extends AppCompatActivity {
     private static final int MY_READ_PERMISSION_CODE = 101;
-    private RecyclerView recyclerView;
-    private RecyclerViewAlbumAdapter adapter;
     private List<ItemAlbum> itemAlbums = new ArrayList<>();
     private int itemSelected = -1;
+    public AlbumFragment albumFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,45 +37,11 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         setTitle("Setting");
 
-        recyclerView = findViewById(R.id.recyclerViewSetting);
-
-        init();
-
-        adapter = new RecyclerViewAlbumAdapter(itemAlbums, this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                itemSelected = position;
-                showItemAlbum(position);
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-        }));
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        init();
-        adapter.notifyItemChanged(itemSelected);
-    }
-
-    private void showItemAlbum(int position) {
-        Intent intent = new Intent(this, ShowItemAlbumActivity.class);
-        intent.putExtra("DATA_ID", position);
-        startActivity(intent);
-    }
-
-    private void init() {
-        itemAlbums.clear();
-        itemAlbums.add(SaveSystem.getDataAlbum(this, Constraints.CARD_DATA_ID));
-        itemAlbums.add(SaveSystem.getDataAlbum(this, Constraints.FOOD_DATA_ID));
-        itemAlbums.add(SaveSystem.getDataAlbum(this, Constraints.OPTION_DATA_ID));
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        albumFragment = new AlbumFragment(SaveSystem.KEY_NAME_DATA_ALBUM);
+        fragmentTransaction.add(R.id.fragment_container, albumFragment, "ALBUM");
+        fragmentTransaction.commit();
     }
 
     private void syncGallery() {

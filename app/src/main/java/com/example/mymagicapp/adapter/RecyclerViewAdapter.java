@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.helper.Constraints;
+import com.example.mymagicapp.helper.ItemClickSupport;
 import com.example.mymagicapp.models.ItemGallery;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public RecyclerViewMainHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.item_collection_main, parent, false);
+        View v = inflater.inflate(R.layout.item_collection, parent, false);
         return new RecyclerViewMainHolder(v);
     }
 

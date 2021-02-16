@@ -30,7 +30,7 @@ public class RecyclerViewAlbumAdapter extends RecyclerView.Adapter<RecyclerViewA
     @Override
     public RecyclerViewAlbumMainHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new RecyclerViewAlbumMainHolder(inflater.inflate(R.layout.item_album_main, parent, false));
+        return new RecyclerViewAlbumMainHolder(inflater.inflate(R.layout.item_album, parent, false));
     }
 
     @Override
@@ -41,10 +41,12 @@ public class RecyclerViewAlbumAdapter extends RecyclerView.Adapter<RecyclerViewA
             if (firstImage.imageIdIsNull()) {
                 Glide.with(context).load(firstImage.getUri())
                         .centerCrop()
+                        .error(R.drawable.like)
                         .into(holder.imageView);
             } else {
                 Glide.with(context).load(firstImage.getImageId())
                         .centerCrop()
+                        .error(R.drawable.share)
                         .into(holder.imageView);
             }
         }

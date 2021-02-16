@@ -19,6 +19,7 @@
         android:layout_gravity="right"
         android:textSize="14dp"
         android:gravity="center"
+        android:visibility="invisible"
         android:inputType="number"
         android:textColor="@color/black"
         android:background="@color/white"/>

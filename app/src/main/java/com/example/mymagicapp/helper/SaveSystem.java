@@ -16,7 +16,7 @@ public class SaveSystem {
     public static final String SHARE_PREFERENCES_NAME = "TVD";
     public static final String KEY_NAME_COLLECTION = "collection";
     public static final String KEY_NAME_ALBUM = "album";
-    public static final String KEY_NAME_IMAGE_LIST = "image_list";
+    public static final String KEY_NAME_DATA_ALBUM = "data_album";
     public static final String KEY_NAME_SPECIAL_IMAGE = "special_image";
     public static final String MAC_ADDRESS = "mac_address";
     public static final String DATA_ID = "data_id";
@@ -55,32 +55,13 @@ public class SaveSystem {
 
     public static void saveGalleryToShared(Gallery gallery, Context context) {
         saveData(context, KEY_NAME_COLLECTION, gallery);
-        saveData(context, KEY_NAME_IMAGE_LIST, gallery.toImageArray().toArray());
     }
 
     public static void saveAllDataAlbum(Context context) {
-        saveCardData(context);
-        saveFoodData(context);
-        saveOptionData(context);
+        Album album = Constraints.getDataAlbum();
+        saveData(context, KEY_NAME_DATA_ALBUM, album);
     }
 
-    public static void saveCardData(Context context) {
-        String nameAlbum = Constraints.dataNameList[Constraints.CARD_DATA_ID];
-        ItemAlbum itemAlbum = Constraints.imageListToItemAlbum(Constraints.imageCardIdList, nameAlbum);
-        saveData(context, nameAlbum, itemAlbum);
-    }
-
-    public static void saveFoodData(Context context) {
-        String nameAlbum = Constraints.dataNameList[Constraints.FOOD_DATA_ID];
-        ItemAlbum itemAlbum = Constraints.imageListToItemAlbum(Constraints.imageFoodIdList, nameAlbum);
-        saveData(context, nameAlbum, itemAlbum);
-    }
-
-    public static void saveOptionData(Context context) {
-        String nameAlbum = Constraints.dataNameList[Constraints.OPTION_DATA_ID];
-        ItemAlbum itemAlbum = Constraints.imageOptionIdListToItemAlbum();
-        saveData(context, nameAlbum, itemAlbum);
-    }
 
     public static void findAndSaveGalleryToShared(Activity activity) {
         ImageSample[] imageSamples = GalleryHelper.fetchGalleryImages(activity); // get all images from gallery
@@ -103,11 +84,6 @@ public class SaveSystem {
 
         saveGalleryToShared(gallery, activity); // save gallery to shared
         saveData(activity, KEY_NAME_ALBUM, album); // save album to shared
-    }
-
-    public static ItemAlbum getDataAlbum(Context context, int dataId) {
-        ItemAlbum itemAlbum = getData(context, Constraints.dataNameList[dataId], ItemAlbum.class);
-        return itemAlbum;
     }
 
     public static void saveDataId(int id, Context context) {

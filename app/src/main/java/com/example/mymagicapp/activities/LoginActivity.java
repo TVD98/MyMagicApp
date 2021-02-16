@@ -121,10 +121,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private MyImage passwordToImage() {
-        String id = password.substring(0, 2);
+        String imageId = password.substring(0, 2);
         int dataId = SaveSystem.getDataId(this);
-        ItemAlbum album = SaveSystem.getDataAlbum(this, dataId);
-        MyImage image = album.findByName(Integer.toString(Integer.parseInt(id)));
+        Album album = SaveSystem.getData(this, SaveSystem.KEY_NAME_DATA_ALBUM, Album.class);
+        MyImage image = album.findImageByName(Constraints.dataNameList[dataId], Integer.toString(Integer.parseInt(imageId)));
         LocalDateTime dateTime = passwordToDateTime();
         image.setDate(Utility.localDateTimeToString(dateTime));
         return image;

@@ -10,7 +10,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.example.mymagicapp.R;
-import com.example.mymagicapp.helper.EventManager;
+import com.example.mymagicapp.activities.ShowImageActivity;
 import com.example.mymagicapp.models.MyImage;
 import com.github.chrisbanes.photoview.PhotoView;
 
@@ -53,7 +53,8 @@ public class ShowImagePagerAdapter extends PagerAdapter {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventManager.getInstance().photoViewClickedListener.onPhotoViewClicked();
+                ShowImageActivity activity = (ShowImageActivity)context;
+                activity.updateUI();
             }
         });
         container.addView(imageView);
