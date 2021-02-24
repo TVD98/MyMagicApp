@@ -8,27 +8,27 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.adapter.MainPagerAdapter;
+import com.example.mymagicapp.fragments.AlbumFragment;
+import com.example.mymagicapp.fragments.CollectionFragment;
 import com.example.mymagicapp.helper.Broadcast;
 import com.example.mymagicapp.helper.Constraints;
 import com.example.mymagicapp.helper.FirebaseSingleton;
+import com.example.mymagicapp.helper.IOnFragmentManager;
 import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.Code;
-import com.example.mymagicapp.models.MyImage;
+import com.example.mymagicapp.models.ItemAlbum;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +36,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IOnFragmentManager {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void attachFragments() {
         mainPagerAdapter = new MainPagerAdapter(this);
+        mainPagerAdapter.add(new CollectionFragment());
+        mainPagerAdapter.add(new AlbumFragment(SaveSystem.KEY_NAME_ALBUM));
         viewPager2.setAdapter(mainPagerAdapter);
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(
                 tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -102,33 +104,16 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-            changeDataId(-1);
-        }
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
-            changeDataId(1);
-        }
-        return true;
-    }
-
-    private void changeDataId(int result) {
-        int id = SaveSystem.getDataId(this);
-        id += result;
-        if (id < 0)
-            id = Constraints.MAX_DATA_COUNT;
-        if (id >= Constraints.MAX_DATA_COUNT)
-            id = 0;
-        Toast.makeText(this, Integer.toString(id), Toast.LENGTH_LONG).show();
-        SaveSystem.saveDataId(id, this);
-    }
-
     private boolean hasBeenUnlocked() {
-        String macAddress = SaveSystem.getString(this, SaveSystem.MAC_ADDRESS);
-        if (macAddress != null)
+        String deviceId = SaveSystem.getString(this, SaveSystem.DEVICE_ID);
+        if (deviceId != null)
             return true;
         return false;
+    }
+
+    private void startSettingActivity() {
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivity(intent);
     }
 
     private void checkUserName() {
@@ -136,12 +121,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Iterable<DataSnapshot> children = snapshot.getChildren();
-                String macAddress = Utility.getMacAddress();
+                String deviceId = Utility.getDeviceId(MainActivity.this);
                 boolean unlock = false;
                 for (DataSnapshot child : children
                 ) {
                     Code code = child.getValue(Code.class);
-                    if (code.getUserName().compareTo(macAddress) == 0) {
+                    if (code.getUserName().compareTo(deviceId) == 0 && !code.isReady()) {
                         unlock = true;
                         SaveSystem.unlockApp(MainActivity.this);
                         startSettingActivity();
@@ -164,12 +149,38 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void startSettingActivity() {
-        Intent intent = new Intent(this, SettingActivity.class);
-        startActivity(intent);
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+            changeDataId(-1);
+        }
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+            changeDataId(1);
+        }
+        return true;
     }
+
+    private void changeDataId(int result) {
+        int id = SaveSystem.getDataId(this);
+        id += result;
+        if (id < 0)
+            id = Constraints.MAX_DATA_COUNT;
+        if (id >= Constraints.MAX_DATA_COUNT)
+            id = 0;
+        Toast.makeText(this, Integer.toString(id), Toast.LENGTH_LONG).show();
+        SaveSystem.saveDataId(id, this);
+    }
+
     public Fragment getCurrentFragment(){
         return mainPagerAdapter.getCurrentFragment(viewPager2.getCurrentItem());
     }
 
+    @Override
+    public void onItemClick(ItemAlbum itemAlbum) {
+            Intent intent = new Intent(this, ShowAlbumActivity.class);
+            Gson gson = new Gson();
+            String albumInfo = gson.toJson(itemAlbum);
+            intent.putExtra("ITEM_ALBUM", albumInfo);
+            startActivity(intent);
+    }
 }

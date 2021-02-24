@@ -1,13 +1,18 @@
 package com.example.mymagicapp.helper;
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.view.View;
 
 import androidx.core.content.ContextCompat;
+
+import com.example.mymagicapp.models.MyImage;
 
 import java.net.NetworkInterface;
 import java.time.Instant;
@@ -20,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class Utility {
     public final static ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -48,7 +54,7 @@ public class Utility {
         return Long.toString(dateTime.toEpochSecond(ZoneOffset.UTC));
     }
 
-    public static String localTimeToString(LocalTime time){
+    public static String localTimeToString(LocalTime time) {
         return time.format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 
@@ -77,7 +83,7 @@ public class Utility {
         return secondsToLocalDateTime(seconds).format(format);
     }
 
-    public static LocalTime randomTime(int timeStart, int timeEnd){
+    public static LocalTime randomTime(int timeStart, int timeEnd) {
         final Random random = new Random();
         final int millisInDayOfTimeStart = timeStart * Constraints.MINUTE_COUNT_IN_HOUR * Constraints.MILLIS_COUNT_IN_MINUTE;
         final int millisInDayOfTimeEnd = timeEnd * Constraints.MINUTE_COUNT_IN_HOUR * Constraints.MILLIS_COUNT_IN_MINUTE;
@@ -86,31 +92,8 @@ public class Utility {
         return LocalTime.ofSecondOfDay(millisInDayOfTimeStart + rd);
     }
 
-    public static String getMacAddress() {
-        try {
-            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface nif : all) {
-                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
-
-                byte[] macBytes = nif.getHardwareAddress();
-                if (macBytes == null) {
-                    return "";
-                }
-
-                StringBuilder res1 = new StringBuilder();
-                for (byte b : macBytes) {
-                    // res1.append(Integer.toHexString(b & 0xFF) + ":");
-                    res1.append(String.format("%02X:",b));
-                }
-
-                if (res1.length() > 0) {
-                    res1.deleteCharAt(res1.length() - 1);
-                }
-                return res1.toString();
-            }
-        } catch (Exception ex) {
-            //handle exception
-        }
-        return "";
+    public static String getDeviceId(Context context) {
+        String androidId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        return androidId;
     }
 }

@@ -1,7 +1,9 @@
 package com.example.mymagicapp.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,13 +24,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CollectionFragment extends Fragment {
-    public RecyclerView recyclerView;
-    public Gallery gallery;
-    public List<ItemGallery> itemGalleryList = new ArrayList<>();
+    private Context context;
+    private RecyclerView recyclerView;
+    private Gallery gallery;
+    private List<ItemGallery> itemGalleryList = new ArrayList<>();
     private RecyclerViewAdapter adapter;
 
     public CollectionFragment() {
 
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+
+        init();
+    }
+
+    private void init() {
+        gallery = SaveSystem.getData(context, SaveSystem.KEY_NAME_COLLECTION, Gallery.class);
+        if (gallery == null)
+            gallery = new Gallery();
+        itemGalleryList = gallery.getItemGalleryList();
     }
 
     @Override
@@ -48,19 +66,10 @@ public class CollectionFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_collection, container, false);
         recyclerView = v.findViewById(R.id.recyclerViewCollection);
 
-        init();
-
-        adapter = new RecyclerViewAdapter(itemGalleryList, getActivity());
+        adapter = new RecyclerViewAdapter(itemGalleryList, context);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         return v;
-    }
-
-    private void init() {
-        gallery = SaveSystem.getData(getActivity(), SaveSystem.KEY_NAME_COLLECTION, Gallery.class);
-        if (gallery == null)
-            gallery = new Gallery();
-        itemGalleryList = gallery.getItemGalleryList();
     }
 
     public List<MyImage> getImageList(){

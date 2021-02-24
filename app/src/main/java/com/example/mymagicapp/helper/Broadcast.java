@@ -10,7 +10,11 @@ import com.example.mymagicapp.activities.SettingActivity;
 public class Broadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent intent1 = new Intent(context, LoginActivity.class);
-        context.startActivity(intent1);
+        startLoginActivity(context);
+    }
+
+    private void startLoginActivity(Context context){
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
     }
 }

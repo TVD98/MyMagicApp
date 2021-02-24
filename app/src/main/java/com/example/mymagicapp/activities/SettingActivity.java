@@ -18,18 +18,20 @@ import android.widget.Toast;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.fragments.AlbumFragment;
+import com.example.mymagicapp.helper.IOnFragmentManager;
 import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.models.ItemAlbum;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends AppCompatActivity implements IOnFragmentManager {
     private static final int MY_READ_PERMISSION_CODE = 101;
     private List<ItemAlbum> itemAlbums = new ArrayList<>();
     private int itemSelected = -1;
-    public AlbumFragment albumFragment;
+    private AlbumFragment albumFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,5 +86,14 @@ public class SettingActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(ItemAlbum itemAlbum) {
+        Intent intent = new Intent(this, ShowAlbumDataActivity.class);
+        Gson gson = new Gson();
+        String albumInfo = gson.toJson(itemAlbum);
+        intent.putExtra("ITEM_ALBUM", albumInfo);
+        startActivity(intent);
     }
 }

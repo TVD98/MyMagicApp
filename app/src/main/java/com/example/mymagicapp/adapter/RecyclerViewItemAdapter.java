@@ -20,17 +20,15 @@ import com.example.mymagicapp.activities.MainActivity;
 import com.example.mymagicapp.activities.ShowImageActivity;
 import com.example.mymagicapp.fragments.CollectionFragment;
 import com.example.mymagicapp.helper.Constraints;
-import com.example.mymagicapp.helper.IRecyclerViewImage;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.MyImage;
 import com.google.gson.Gson;
 
 import java.util.List;
 
-public class RecyclerViewItemAdapter extends RecyclerView.Adapter<RecyclerViewItemAdapter.RecyclerViewItemHolder>
-    implements IRecyclerViewImage {
-    public List<MyImage> imageList;
-    public Context context;
+public class RecyclerViewItemAdapter extends RecyclerView.Adapter<RecyclerViewItemAdapter.RecyclerViewItemHolder> {
+    private List<MyImage> imageList;
+    private Context context;
 
     public RecyclerViewItemAdapter(List<MyImage> imageList, Context context) {
         this.imageList = imageList;
@@ -61,14 +59,15 @@ public class RecyclerViewItemAdapter extends RecyclerView.Adapter<RecyclerViewIt
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startShowImageActivity((Activity) context, v, image);
+                Gson gson = new Gson();
+                String[] datas = {gson.toJson(image), gson.toJson(getImageList().toArray())};
+                startShowImageActivity((Activity)context, v, datas);
             }
         });
 
         holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-
                 return true;
             }
         });
@@ -79,10 +78,8 @@ public class RecyclerViewItemAdapter extends RecyclerView.Adapter<RecyclerViewIt
         return imageList.size();
     }
 
-    private void startShowImageActivity(Activity activity, View imageView, MyImage image) {
+    private void startShowImageActivity(Activity activity, View imageView, String[] datas) {
         Intent intent = new Intent(activity, ShowImageActivity.class);
-        Gson gson = new Gson();
-        String[] datas = {gson.toJson(image), gson.toJson(getImageList().toArray())};
         intent.putExtra("DATAS", datas); // put information of clicked image to intent
         Pair[] pairs = new Pair[1];
         pairs[0] = new Pair<View, String>(imageView, Constraints.TRANSITION_NAME);
@@ -103,26 +100,6 @@ public class RecyclerViewItemAdapter extends RecyclerView.Adapter<RecyclerViewIt
         } catch (Exception e) {
             return imageList;
         }
-    }
-
-    @Override
-    public Integer[] getImageIdListToRemove() {
-        return new Integer[0];
-    }
-
-    @Override
-    public void clearCheckBox() {
-
-    }
-
-    @Override
-    public void setRemoveMode(boolean removeMode) {
-
-    }
-
-    @Override
-    public void selectAll() {
-
     }
 
     public class RecyclerViewItemHolder extends RecyclerView.ViewHolder {

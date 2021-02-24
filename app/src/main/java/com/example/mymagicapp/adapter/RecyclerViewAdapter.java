@@ -26,7 +26,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.itemGalleries = itemGalleries;
         this.recyclerViewItemAdapters = new RecyclerViewItemAdapter[itemGalleries.size()];
         this.context = context;
-
     }
 
     @NonNull
@@ -41,8 +40,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull RecyclerViewMainHolder holder, int position) {
         ItemGallery itemGallery = itemGalleries.get(position);
         holder.textTitle.setText(itemGallery.title());
-        recyclerViewItemAdapters[position] = new RecyclerViewItemAdapter(itemGallery.getImageList(), context); // create recycleViewItemAdapter
-        holder.recyclerView.setAdapter(recyclerViewItemAdapters[position]);
+        RecyclerViewItemAdapter itemAdapter = new RecyclerViewItemAdapter(itemGallery.getImageList(), context);
+        recyclerViewItemAdapters[position] = itemAdapter; // create recycleViewItemAdapter
+        holder.recyclerView.setAdapter(itemAdapter);
         holder.recyclerView.setLayoutManager(new GridLayoutManager(context, Constraints.SPAN_COUNT_ITEM_IMAGE));
     }
 

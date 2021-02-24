@@ -119,7 +119,7 @@ public class ShopActivity extends AppCompatActivity {
 
     private void updateCode(Code code) {
         DatabaseReference child = database.child("codes").child(code.getId());
-        child.child("userName").setValue(Utility.getMacAddress());
+        child.child("userName").setValue(Utility.getDeviceId(this));
         child.child("date").setValue(Utility.localDateTimeToString(LocalDateTime.now().plusHours(-7)));
     }
 

@@ -5,10 +5,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.mymagicapp.fragments.AlbumFragment;
-import com.example.mymagicapp.fragments.CollectionFragment;
-import com.example.mymagicapp.helper.SaveSystem;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +14,10 @@ public class MainPagerAdapter extends FragmentStateAdapter {
 
     public MainPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
-        fragments.add(new CollectionFragment());
-        fragments.add(new AlbumFragment(SaveSystem.KEY_NAME_ALBUM));
+    }
+
+    public void add(Fragment fragment){
+        fragments.add(fragment);
     }
 
     @NonNull

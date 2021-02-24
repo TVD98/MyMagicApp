@@ -77,9 +77,8 @@ public class Constraints {
         return false;
     }
 
-    public static boolean couldAddImages(String nameAlbum, String nameItemAlbum) {
-        if (nameAlbum.compareTo(SaveSystem.KEY_NAME_DATA_ALBUM) == 0
-                && nameItemAlbum.compareTo("Option") == 0)
+    public static boolean couldAddImages(String nameItemAlbum) {
+        if (nameItemAlbum.compareTo("Option") == 0)
             return true;
         return false;
     }

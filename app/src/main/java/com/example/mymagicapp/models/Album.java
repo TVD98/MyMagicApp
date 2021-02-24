@@ -69,6 +69,7 @@ public class Album extends  MyItem implements IMyCollection{
         }
         else{
             item = new ItemAlbum();
+            item.setDescription(getName());
             item.setName(nameAlbum);
             item.addItem(image, Constraints.DEFAULT_INDEX_TO_ADD);
             itemAlbums.add(item);

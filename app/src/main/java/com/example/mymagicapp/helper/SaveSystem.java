@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 
 import com.example.mymagicapp.models.Album;
 import com.example.mymagicapp.models.Gallery;
-import com.example.mymagicapp.models.ItemAlbum;
 import com.example.mymagicapp.models.MyImage;
 import com.google.gson.Gson;
 
@@ -18,7 +17,7 @@ public class SaveSystem {
     public static final String KEY_NAME_ALBUM = "album";
     public static final String KEY_NAME_DATA_ALBUM = "data_album";
     public static final String KEY_NAME_SPECIAL_IMAGE = "special_image";
-    public static final String MAC_ADDRESS = "mac_address";
+    public static final String DEVICE_ID = "mac_address";
     public static final String DATA_ID = "data_id";
 
     public static void saveData(Context context, String keyDataName, Object data) {
@@ -28,7 +27,7 @@ public class SaveSystem {
     }
 
     public static void saveString(Context context, String keyDataName, String data) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARE_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARE_PREFERENCES_NAME, context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(keyDataName, data);
         editor.apply();
@@ -68,6 +67,7 @@ public class SaveSystem {
 
         Gallery gallery = new Gallery(); // create a gallery
         Album album = new Album(); // create a album
+        album.setName("album");
 
         int imageCount = imageSamples.length;
         for (int i = 0; i < imageCount; i++) {
@@ -99,8 +99,8 @@ public class SaveSystem {
 
     public static void unlockApp(Context context) {
         // save mac address
-        String macAddress = Utility.getMacAddress();
-        SaveSystem.saveString(context, SaveSystem.MAC_ADDRESS, macAddress);
+        String macAddress = Utility.getDeviceId(context);
+        SaveSystem.saveString(context, SaveSystem.DEVICE_ID, macAddress);
 
         // unlock Gadgets
         SaveSystem.saveAllDataAlbum(context); // create image data

@@ -6,21 +6,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CheckBoxImageHelper {
+public class CheckBoxImageHelper{
     private List<Integer> imageIdList = new ArrayList<>();
+    private boolean checkMode;
 
-    public CheckBoxImageHelper() {
-
+    public CheckBoxImageHelper(boolean checkMode) {
+        this.checkMode = checkMode;
     }
 
-    public Integer[] toArray(){
+    public void changeCheckMode() {
+        checkMode = !checkMode;
+    }
+
+    public Integer[] getCheckedList() {
         Collections.sort(imageIdList);
         Integer[] array = new Integer[imageIdList.size()];
         imageIdList.toArray(array);
         return array;
     }
 
-    public void changeCheckBox(int id) {
+    public void check(int id) {
         int index = imageIdList.indexOf(id);
         if (index == -1) {
             imageIdList.add(id);
@@ -29,18 +34,15 @@ public class CheckBoxImageHelper {
         }
     }
 
-    public boolean contain(int id){
-        int index = imageIdList.indexOf(id);
-        if(index == -1)
-            return false;
-        return true;
-    }
-
-    public int size(){
-        return imageIdList.size();
-    }
-
-    public void clear(){
+    public void clearCheckedList() {
         imageIdList.clear();
+    }
+
+    public boolean getCheckMode() {
+        return this.checkMode;
+    }
+
+    public int count() {
+        return imageIdList.size();
     }
 }
