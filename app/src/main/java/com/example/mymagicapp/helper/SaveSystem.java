@@ -17,7 +17,7 @@ public class SaveSystem {
     public static final String KEY_NAME_ALBUM = "album";
     public static final String KEY_NAME_DATA_ALBUM = "data_album";
     public static final String KEY_NAME_SPECIAL_IMAGE = "special_image";
-    public static final String DEVICE_ID = "mac_address";
+    public static final String CODE = "code";
     public static final String DATA_ID = "data_id";
 
     public static void saveData(Context context, String keyDataName, Object data) {
@@ -97,14 +97,19 @@ public class SaveSystem {
         else return Constraints.CARD_DATA_ID;
     }
 
-    public static void unlockApp(Context context) {
+    public static void unlockApp(Context context, String codeId) {
         // save mac address
         String macAddress = Utility.getDeviceId(context);
-        SaveSystem.saveString(context, SaveSystem.DEVICE_ID, macAddress);
+        SaveSystem.saveString(context, CODE, codeId);
 
         // unlock Gadgets
         SaveSystem.saveAllDataAlbum(context); // create image data
 
+    }
+
+    public static void removeAll(Context context){
+        SharedPreferences settings = context.getSharedPreferences(SHARE_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        settings.edit().clear().commit();
     }
 
 }

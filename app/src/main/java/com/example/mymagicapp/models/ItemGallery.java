@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemGallery extends ImageContainer implements IMyCollection{
+public class ItemGallery extends ImageContainer implements IMyCollection {
 
     @Override
     public String title() {
@@ -24,6 +24,16 @@ public class ItemGallery extends ImageContainer implements IMyCollection{
             return "Hôm nay";
         } else {
             return String.format("%d Thg%d %d", date.getDayOfMonth(), date.getMonthValue(), date.getYear());
+        }
+    }
+
+    public void removeImageByUri(MyImage image) {
+        for (MyImage item : imageList
+        ) {
+            if (item.getUri().compareTo(image.getUri()) == 0) {
+                imageList.remove(item);
+                break;
+            }
         }
     }
 }

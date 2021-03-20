@@ -50,8 +50,9 @@ public class MyImage extends MyItem {
         this.imageId = imageId;
     }
 
-    public int compareTo(MyImage other){
+    public int compareTo(MyImage other) {
         return this.getUri().compareTo(other.getUri());
     }
+
 
 }

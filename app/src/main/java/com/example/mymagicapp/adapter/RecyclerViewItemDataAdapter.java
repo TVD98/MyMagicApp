@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mymagicapp.R;
+import com.example.mymagicapp.activities.ShowAlbumDataActivity;
 import com.example.mymagicapp.helper.Utility;
 import com.example.mymagicapp.models.MyImage;
 
@@ -47,6 +48,15 @@ public class RecyclerViewItemDataAdapter extends RecyclerView.Adapter<RecyclerVi
                     .centerCrop()
                     .into(holder.imageView);
         }
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowAlbumDataActivity activity = (ShowAlbumDataActivity)context;
+                activity.setSelectedPosition(position);
+                activity.pickImage();
+            }
+        });
 
         holder.textId.setText(image.getName());
 

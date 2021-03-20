@@ -73,31 +73,23 @@ public class ShopActivity extends AppCompatActivity {
     }
 
     private void sendCodeId() {
-        FirebaseSingleton.getInstance().database.child("codes").addListenerForSingleValueEvent(new ValueEventListener() {
+        String codeId = editText.getText().toString();
+        FirebaseSingleton.getInstance().database.child("codes").child(codeId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Iterable<DataSnapshot> children = snapshot.getChildren();
-                boolean ready = false;
-                for (DataSnapshot child : children
-                ) {
-                    Code code = child.getValue(Code.class);
+                if(snapshot != null){
+                    Code code = snapshot.getValue(Code.class);
                     int compare = checkCodeId(code);
                     if (compare == 0) {
                         updateCode(code);
-                        SaveSystem.unlockApp(ShopActivity.this);
+                        SaveSystem.unlockApp(ShopActivity.this, codeId);
                         finishShop();
-                        ready = true;
-                        break;
                     }
                     else if(compare == -1){
-                        ready = true;
                         Toast.makeText(ShopActivity.this, "Code used", Toast.LENGTH_SHORT).show();
-                        break;
                     }
                 }
-                if(!ready){
-                    Toast.makeText(ShopActivity.this, "Code wrong", Toast.LENGTH_SHORT).show();
-                }
+                else Toast.makeText(ShopActivity.this, "Code wrong", Toast.LENGTH_SHORT).show();
             }
 
             @Override

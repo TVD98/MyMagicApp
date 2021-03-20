@@ -27,6 +27,7 @@ import com.example.mymagicapp.helper.FirebaseSingleton;
 import com.example.mymagicapp.helper.IOnFragmentManager;
 import com.example.mymagicapp.helper.SaveSystem;
 import com.example.mymagicapp.helper.Utility;
+import com.example.mymagicapp.models.Album;
 import com.example.mymagicapp.models.Code;
 import com.example.mymagicapp.models.ItemAlbum;
 import com.google.android.material.tabs.TabLayout;
@@ -61,6 +62,26 @@ public class MainActivity extends AppCompatActivity implements IOnFragmentManage
         viewPager2 = findViewById(R.id.viewPagerMain);
 
         attachFragments();
+
+        String codeId = SaveSystem.getString(this, SaveSystem.CODE);
+        if (codeId != null) {
+            FirebaseSingleton.getInstance().database.child("codes").child(codeId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot != null) {
+                        Code code = snapshot.getValue(Code.class);
+                        if (code == null) {
+                            SaveSystem.removeAll(MainActivity.this);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
     private void attachFragments() {
@@ -105,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements IOnFragmentManage
     }
 
     private boolean hasBeenUnlocked() {
-        String deviceId = SaveSystem.getString(this, SaveSystem.DEVICE_ID);
-        if (deviceId != null)
+        String codeId = SaveSystem.getString(this, SaveSystem.CODE);
+        if (codeId != null)
             return true;
         return false;
     }
@@ -128,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements IOnFragmentManage
                     Code code = child.getValue(Code.class);
                     if (code.getUserName().compareTo(deviceId) == 0 && !code.isReady()) {
                         unlock = true;
-                        SaveSystem.unlockApp(MainActivity.this);
+                        SaveSystem.unlockApp(MainActivity.this, code.getId());
                         startSettingActivity();
                         break;
                     }
@@ -171,16 +192,18 @@ public class MainActivity extends AppCompatActivity implements IOnFragmentManage
         SaveSystem.saveDataId(id, this);
     }
 
-    public Fragment getCurrentFragment(){
+    public Fragment getCurrentFragment() {
         return mainPagerAdapter.getCurrentFragment(viewPager2.getCurrentItem());
     }
 
     @Override
-    public void onItemClick(ItemAlbum itemAlbum) {
-            Intent intent = new Intent(this, ShowAlbumActivity.class);
-            Gson gson = new Gson();
-            String albumInfo = gson.toJson(itemAlbum);
-            intent.putExtra("ITEM_ALBUM", albumInfo);
-            startActivity(intent);
+    public void onItemClick(Album album, int position) {
+        Intent intent = new Intent(this, ShowAlbumActivity.class);
+        Gson gson = new Gson();
+        String albumInfo = gson.toJson(album);
+        intent.putExtra("ALBUM", albumInfo);
+        intent.putExtra("POSITION", position);
+        startActivity(intent);
     }
+
 }

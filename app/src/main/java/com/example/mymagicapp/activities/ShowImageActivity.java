@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.adapter.ShowImagePagerAdapter;

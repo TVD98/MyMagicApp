@@ -13,7 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mymagicapp.R;
 import com.example.mymagicapp.helper.CheckBoxImageHelper;
 import com.example.mymagicapp.helper.Constraints;
+import com.example.mymagicapp.helper.IOnFragmentManager;
 import com.example.mymagicapp.helper.ItemClickSupport;
+import com.example.mymagicapp.helper.SaveSystem;
+import com.example.mymagicapp.models.Album;
 import com.example.mymagicapp.models.ItemAlbum;
 import com.example.mymagicapp.models.MyImage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,6 +30,7 @@ public abstract class BaseShowAlbumActivity extends AppCompatActivity {
     protected RecyclerView recyclerView;
     protected BottomNavigationView navigationView;
     protected ItemAlbum itemAlbum;
+    protected Album album;
     protected CheckBoxImageHelper checkSupport;
 
     @Override
@@ -35,10 +39,12 @@ public abstract class BaseShowAlbumActivity extends AppCompatActivity {
         setContentView(getLayoutResourceId());
 
         Bundle bundle = getIntent().getExtras();
-        if (bundle.getString("ITEM_ALBUM") != null) {
-            String albumInfo = bundle.getString("ITEM_ALBUM");
+        if (bundle.getString("ALBUM") != null) {
+            String albumInfo = bundle.getString("ALBUM");
+            int position = bundle.getInt("POSITION");
             Gson gson = new Gson();
-            itemAlbum = gson.fromJson(albumInfo, ItemAlbum.class);
+            album = gson.fromJson(albumInfo, Album.class);
+            itemAlbum = album.getItem(position);
             setTitle(itemAlbum.getName());
             images = itemAlbum.getImageList();
         }
@@ -68,7 +74,7 @@ public abstract class BaseShowAlbumActivity extends AppCompatActivity {
     }
 
     protected void saveAlbum(){
-
+        SaveSystem.saveData(this, album.getName(), album);
     }
 
     protected void updateUI(){

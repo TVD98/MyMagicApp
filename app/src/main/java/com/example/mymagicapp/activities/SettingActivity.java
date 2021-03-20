@@ -20,6 +20,7 @@ import com.example.mymagicapp.R;
 import com.example.mymagicapp.fragments.AlbumFragment;
 import com.example.mymagicapp.helper.IOnFragmentManager;
 import com.example.mymagicapp.helper.SaveSystem;
+import com.example.mymagicapp.models.Album;
 import com.example.mymagicapp.models.ItemAlbum;
 import com.google.gson.Gson;
 
@@ -89,11 +90,13 @@ public class SettingActivity extends AppCompatActivity implements IOnFragmentMan
     }
 
     @Override
-    public void onItemClick(ItemAlbum itemAlbum) {
+    public void onItemClick(Album album, int position) {
         Intent intent = new Intent(this, ShowAlbumDataActivity.class);
         Gson gson = new Gson();
-        String albumInfo = gson.toJson(itemAlbum);
-        intent.putExtra("ITEM_ALBUM", albumInfo);
+        String albumInfo = gson.toJson(album);
+        intent.putExtra("ALBUM", albumInfo);
+        intent.putExtra("POSITION", position);
         startActivity(intent);
     }
+
 }

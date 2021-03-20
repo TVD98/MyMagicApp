@@ -72,7 +72,7 @@ public class AlbumFragment extends Fragment {
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                listener.onItemClick(album.getItem(position));
+                listener.onItemClick(album, position);
             }
 
             @Override

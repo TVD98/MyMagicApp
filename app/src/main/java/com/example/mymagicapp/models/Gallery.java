@@ -39,6 +39,16 @@ public class Gallery implements IMyCollection {
         }
     }
 
+    public void removeImages(ItemAlbum itemAlbum){
+        for (ItemGallery item: itemGalleryList
+             ) {
+            for (MyImage image: itemAlbum.imageList
+                 ) {
+                item.removeImageByUri(image);
+            }
+        }
+    }
+
     @Override
     public void removeItem(int index) {
         itemGalleryList.remove(index);
